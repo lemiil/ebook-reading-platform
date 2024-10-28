@@ -4,11 +4,37 @@
     Books Main
 @endsection
 @section('content')
-<form action="{{ route('book.upload') }}" method="POST" enctype="multipart/form-data">
-    @csrf
-    <input type="file" name="book" required accept=".fb2,.epub,.pdf" id="">
-    <input type="submit" value="Upload">
-</form>
+    <form action="{{ route('book.upload') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
+        @csrf
+        <div class="mb-3">
+            <label class="form-label text-muted">
+                Заполнять поля с автором, названием, жанрами и описанием вовсе не обязятельно! Тем не менее, желательно. Если в книге отсуствует необходимые метаданные - вы получите ошибку.
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label for="title" class="form-label">Название</label>
+            <input type="text" name="title" class="form-control" id="title" placeholder="title" maxlength="255">
+        </div>
+
+        <div class="mb-3">
+            <label for="author" class="form-label">Автор</label>
+            <input type="text" name="author" class="form-control" id="author" placeholder="author" maxlength="255">
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Описание</label>
+            <textarea name="description" class="form-control" id="description" rows="4" placeholder="description" maxlength="2048"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="book" class="form-label">Загрузить файл</label>
+            <input type="file" name="book" class="form-control" required accept=".fb2,.epub,.pdf" id="book">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+
 
 @if ($errors->any())
     <ul>

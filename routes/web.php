@@ -7,22 +7,23 @@ use Illuminate\Support\Facades\Route;
 Route::view('/', 'main');
 
 
-Route::get(
-   '/book/{book?}',
-    [BookReadController::class, 'pageShow']
-)->name('book');
 
 //Route::middleware(['auth'])->group(function () {
     Route::get(
-        '/bookupload',
+        '/book/upload',
         [BookUploadController::class, 'index']
     )->name('book.upload.view');
 
     Route::post(
-        '/bookupload',
+        '/book/upload',
         [BookUploadController::class, 'store']
     )->name('book.upload');
 //});
+
+Route::get(
+    '/book/{book?}',
+    [BookReadController::class, 'pageShow']
+)->name('book');
 
 
 require __DIR__ . '/auth.php';

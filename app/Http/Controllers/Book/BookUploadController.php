@@ -58,19 +58,32 @@ class BookUploadController extends Controller
     {
         $xml = XmlReader::make(Storage::path($path));
 
-        $author = $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
-        $title = $this->parseXmlElement($xml->find('book-title'));
-
-        if (!$title || !$author) {
-            throw new Exception('Не удалось найти необходимые метаданные: отсутствует название или автор');
+        if (request()->has('author')) {
+            $author = request()->input('author');
+        }
+        else {
+            $author = $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
+        }
+        if (request()->has('title')) {
+            $title = request()->input('title');
+        }
+        else {
+            $title = $this->parseXmlElement($xml->find('book-title'));
         }
 
-        $annotation = $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
-
+        if (!$title || !$author) {
+            throw new Exception('Отсутствует название или автор!');
+        }
+        if (request()->has('description')) {
+            $description = request()->input('description');
+        }
+        else {
+            $description = $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
+        }
         return [
             'title' => $title,
             'author' => $author,
-            'description' => $annotation ?: null,
+            'description' => $description ?: null,
             'format' => 'fb2',
             'path' => $path,
         ];
@@ -79,12 +92,26 @@ class BookUploadController extends Controller
     private function extractEpubData($path)
     {
         $ebook = Ebook::read(Storage::path($path));
-
-        $title = $ebook->getTitle();
-        $author = $ebook->getAuthorMain();
-
+        if (request()->has('title')) {
+            $title = request()->input('title');
+        }
+        else {
+            $title = $ebook->getTitle();
+        }
+        if (request()->has('author')) {
+            $author = request()->input('author');
+        }
+        else {
+            $author = $ebook->getAuthorMain();
+        }
+        if (request()->has('description')) {
+            $description = request()->input('description');
+        }
+        else {
+            $description = $ebook->getDescription();
+        }
         if (!$title || !$author) {
-            throw new Exception('Не удалось найти необходимые метаданные: отсутствует название или автор');
+            throw new Exception('Отсутствует название или автор!');
         }
 
         return [
@@ -92,7 +119,7 @@ class BookUploadController extends Controller
             'author' => $author,
             'path' => $path,
             'format' => $ebook->getFormat(),
-            'description' => $ebook->getDescription(),
+            'description' => $description,
         ];
     }
 
