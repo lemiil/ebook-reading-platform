@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Book;
+
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Models\Book;
@@ -8,7 +9,6 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Kiwilan\Ebook\Ebook;
 use Kiwilan\XmlReader\XmlReader;
-
 
 class BookUploadController extends Controller
 {
@@ -23,7 +23,6 @@ class BookUploadController extends Controller
 
         try {
             $path = $this->storeFile($request, $directoryName);
-
             $bookData = $this->extractBookData($path);
 
             Book::create($bookData);
@@ -47,39 +46,22 @@ class BookUploadController extends Controller
     {
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-        if ($extension === 'fb2') {
-            return $this->extractFb2Data($path);
-        } else {
-            return $this->extractEpubData($path);
-        }
+        return $extension === 'fb2' ? $this->extractFb2Data($path) : $this->extractEpubData($path);
     }
 
     private function extractFb2Data($path)
     {
         $xml = XmlReader::make(Storage::path($path));
 
-        if (request()->has('author')) {
-            $author = request()->input('author');
-        }
-        else {
-            $author = $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
-        }
-        if (request()->has('title')) {
-            $title = request()->input('title');
-        }
-        else {
-            $title = $this->parseXmlElement($xml->find('book-title'));
-        }
+        $author = request()->input('author') ?? $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
+        $title = request()->input('title') ?? $this->parseXmlElement($xml->find('book-title'));
 
         if (!$title || !$author) {
             throw new Exception('Отсутствует название или автор!');
         }
-        if (request()->has('description')) {
-            $description = request()->input('description');
-        }
-        else {
-            $description = $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
-        }
+
+        $description = request()->input('description') ?? $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
+
         return [
             'title' => $title,
             'author' => $author,
@@ -92,24 +74,11 @@ class BookUploadController extends Controller
     private function extractEpubData($path)
     {
         $ebook = Ebook::read(Storage::path($path));
-        if (request()->has('title')) {
-            $title = request()->input('title');
-        }
-        else {
-            $title = $ebook->getTitle();
-        }
-        if (request()->has('author')) {
-            $author = request()->input('author');
-        }
-        else {
-            $author = $ebook->getAuthorMain();
-        }
-        if (request()->has('description')) {
-            $description = request()->input('description');
-        }
-        else {
-            $description = $ebook->getDescription();
-        }
+
+        $title = request()->input('title') ?? $ebook->getTitle();
+        $author = request()->input('author') ?? $ebook->getAuthorMain();
+        $description = request()->input('description') ?? $ebook->getDescription();
+
         if (!$title || !$author) {
             throw new Exception('Отсутствует название или автор!');
         }
@@ -128,9 +97,7 @@ class BookUploadController extends Controller
         $firstName = is_array($firstName) ? implode(' ', $firstName) : ($firstName ?? '');
         $lastName = is_array($lastName) ? implode(' ', $lastName) : ($lastName ?? '');
 
-        $author = trim("$firstName $lastName");
-
-        return $author ?: null;
+        return trim("$firstName $lastName") ?: null;
     }
 
     private function parseXmlElement($element)
