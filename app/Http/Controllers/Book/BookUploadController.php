@@ -16,62 +16,86 @@ class BookUploadController extends Controller
     {
         return view("book/book-upload");
     }
+
     public function store(BookStoreRequest $request)
     {
-
         $directoryName = date("d-m-Y");
+
         try {
-            $extension = $request->file('book')->getClientOriginalExtension();
-            if ($extension == "epub") {
-                $fileNameWithEx = uniqid() . '.' . $extension;
-                $path = $request->file('book')->storeAs("public/books/$directoryName", $fileNameWithEx);
-            }
-            else {
-                $path = $request->file('book')->store("public/books/$directoryName");
-            }
+            $path = $this->storeFile($request, $directoryName);
 
-            if ($extension === 'fb2') {
-                $xml = XmlReader::make(Storage::path($path));
+            $bookData = $this->extractBookData($path);
 
-                $firstName = $xml->find('first-name');
-                $lastName = $xml->find('last-name');
+            Book::create($bookData);
 
-                $firstName = is_array($firstName) ? implode(' ', $firstName) : ($firstName ?? '');
-                $lastName = is_array($lastName) ? implode(' ', $lastName) : ($lastName ?? '');
-
-                $author = trim($firstName . ' ' . $lastName);
-
-                if (empty($author)) {
-                    $author = 'Unknown';
-                }
-
-                $annotation = $xml->find('annotation')['p'] ?? null;
-                $description = is_array($annotation) ? implode(' ', $annotation) : $annotation;
-
-                Book::create([
-                    'title' => is_array($xml->find('book-title')) ? implode(' ', $xml->find('book-title')) : $xml->find('book-title'),
-                    'author' => $author,
-                    'description' => $description ?: null,
-                    'format' => 'fb2',
-                    'path' => $path,
-                ]);
-            }
-
-            else {
-                $ebook = Ebook::read(Storage::path($path));
-
-                Book::create([
-                    "title" => $ebook->getTitle(),
-                    "author" => $ebook->getAuthorMain(),
-                    "path" => $path,
-                    "format" => $ebook->getFormat(),
-                    "description" => $ebook->getDescription(),
-                ]);
-            }
-
-            return redirect(route('book.upload.view'))->with('bookisuploaded', 'true');
+            return redirect()->route('book.upload.view')->with('bookisuploaded', 'true');
         } catch (Exception $e) {
-            return redirect(route('book.upload.view'))->withErrors('Ошибка при загрузке книги: ' . $e->getMessage());
+            return redirect()->route('book.upload.view')->withErrors('Ошибка при загрузке книги: ' . $e->getMessage());
         }
+    }
+
+    private function storeFile($request, $directoryName)
+    {
+        $file = $request->file('book');
+        $extension = $file->getClientOriginalExtension();
+        $fileName = uniqid() . '.' . $extension;
+
+        return $file->storeAs("public/books/$directoryName", $fileName);
+    }
+
+    private function extractBookData($path)
+    {
+        $extension = pathinfo($path, PATHINFO_EXTENSION);
+
+        if ($extension === 'fb2') {
+            return $this->extractFb2Data($path);
+        } else {
+            return $this->extractEpubData($path);
+        }
+    }
+
+    private function extractFb2Data($path)
+    {
+        $xml = XmlReader::make(Storage::path($path));
+
+        $author = $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
+        $title = $this->parseXmlElement($xml->find('book-title'));
+        $annotation = $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
+
+        return [
+            'title' => $title,
+            'author' => $author,
+            'description' => $annotation ?: null,
+            'format' => 'fb2',
+            'path' => $path,
+        ];
+    }
+
+    private function extractEpubData($path)
+    {
+        $ebook = Ebook::read(Storage::path($path));
+
+        return [
+            'title' => $ebook->getTitle(),
+            'author' => $ebook->getAuthorMain(),
+            'path' => $path,
+            'format' => $ebook->getFormat(),
+            'description' => $ebook->getDescription(),
+        ];
+    }
+
+    private function parseAuthor($firstName, $lastName)
+    {
+        $firstName = is_array($firstName) ? implode(' ', $firstName) : ($firstName ?? '');
+        $lastName = is_array($lastName) ? implode(' ', $lastName) : ($lastName ?? '');
+
+        $author = trim("$firstName $lastName");
+
+        return $author ?: 'Unknown';
+    }
+
+    private function parseXmlElement($element)
+    {
+        return is_array($element) ? implode(' ', $element) : $element;
     }
 }
