@@ -47,7 +47,8 @@ class BookStoreRequest extends FormRequest
                 'nullable',
                 'string',
                 'max:2048',
-            ]
+            ],
+            'genres',
         ];
     }
 }

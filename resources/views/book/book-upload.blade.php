@@ -28,6 +28,17 @@
         </div>
 
         <div class="mb-3">
+            <label for="genres" class="form-label">Жанры</label>
+            @foreach($genres as $genre)
+                <div class="form-check">
+                    <input type="checkbox" name="genres[]" id="genre-{{ $genre->id }}" class="form-check-input" value="{{ $genre->id }}">
+                    <label class="form-check-label" for="genre-{{ $genre->id }}">{{ $genre->name }}</label>
+                </div>
+            @endforeach
+        </div>
+
+
+        <div class="mb-3">
             <label for="book" class="form-label">Загрузить файл</label>
             <input type="file" name="book" class="form-control" required accept=".fb2,.epub,.pdf" id="book">
         </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Book;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\BookStoreRequest;
 use App\Models\Book;
+use App\Models\Genre;
 use Exception;
 use Illuminate\Support\Facades\Storage;
 use Kiwilan\Ebook\Ebook;
@@ -14,7 +15,8 @@ class BookUploadController extends Controller
 {
     public function index()
     {
-        return view("book/book-upload");
+        $genres = Genre::all();
+        return view("book/book-upload", compact('genres'));
     }
 
     public function store(BookStoreRequest $request)
@@ -25,8 +27,10 @@ class BookUploadController extends Controller
             $path = $this->storeFile($request, $directoryName);
             $bookData = $this->extractBookData($path);
 
-            Book::create($bookData);
-
+            $book = Book::create($bookData);
+            if ($request->has('genres')) {
+                $book->genres()->attach($request->genres);
+            }
             return redirect()->route('book.upload.view')->with('bookisuploaded', 'true');
         } catch (Exception $e) {
             return redirect()->route('book.upload.view')->withErrors('Ошибка при загрузке книги: ' . $e->getMessage());
