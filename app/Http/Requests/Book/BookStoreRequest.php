@@ -29,9 +29,24 @@ class BookStoreRequest extends FormRequest
                 'nullable',
                 'required',
                 'file',
-                "extensions:fb2,epub",
-                'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2',
+                "extensions:fb2,epub,pdf",
+                'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2,application/pdf',
                 "max:$maxFileSize",
+            ],
+            'title' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'author' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            'description' => [
+                'nullable',
+                'string',
+                'max:2048',
             ]
         ];
     }

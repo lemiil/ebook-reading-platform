@@ -21,11 +21,10 @@ class BookUploadController extends Controller
 
         $directoryName = date("d-m-Y");
         try {
-
             $extension = $request->file('book')->getClientOriginalExtension();
             if ($extension == "epub") {
-                $fileNameWithEx = time() . '.' . $extension;
-                $path = $request->file('book')->storeAs("/books/$directoryName", $fileNameWithEx, 'public');
+                $fileNameWithEx = uniqid() . '.' . $extension;
+                $path = $request->file('book')->storeAs("public/books/$directoryName", $fileNameWithEx);
             }
             else {
                 $path = $request->file('book')->store("public/books/$directoryName");
