@@ -60,6 +60,11 @@ class BookUploadController extends Controller
 
         $author = $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
         $title = $this->parseXmlElement($xml->find('book-title'));
+
+        if (!$title || !$author) {
+            throw new Exception('Не удалось найти необходимые метаданные: отсутствует название или автор');
+        }
+
         $annotation = $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
 
         return [
@@ -75,9 +80,16 @@ class BookUploadController extends Controller
     {
         $ebook = Ebook::read(Storage::path($path));
 
+        $title = $ebook->getTitle();
+        $author = $ebook->getAuthorMain();
+
+        if (!$title || !$author) {
+            throw new Exception('Не удалось найти необходимые метаданные: отсутствует название или автор');
+        }
+
         return [
-            'title' => $ebook->getTitle(),
-            'author' => $ebook->getAuthorMain(),
+            'title' => $title,
+            'author' => $author,
             'path' => $path,
             'format' => $ebook->getFormat(),
             'description' => $ebook->getDescription(),
@@ -91,7 +103,7 @@ class BookUploadController extends Controller
 
         $author = trim("$firstName $lastName");
 
-        return $author ?: 'Unknown';
+        return $author ?: null;
     }
 
     private function parseXmlElement($element)
