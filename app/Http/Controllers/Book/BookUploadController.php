@@ -18,7 +18,8 @@ class BookUploadController extends Controller
         $genres = Genre::all();
         return view("book/book-upload", compact('genres'));
     }
-
+//TODO переработать систему добавления книг на навороченную, без парсинга автора из метаданных. Так же добавить год издания. Заняться этим после реализации авторов.
+//TODO ПОЛНОСТЬЮ ЭТО ВСЁ ПЕРЕДЕЛАТЬ(
     public function store(BookStoreRequest $request)
     {
         $directoryName = date("d-m-Y");

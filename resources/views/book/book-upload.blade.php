@@ -4,6 +4,8 @@
     Books Main
 @endsection
 @section('content')
+
+    <h1>Осака перемудрила и теперь этоа форма нифига не работает. Переделай :3</h1>
     <form action="{{ route('book.upload') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         @csrf
         <div class="mb-3">
@@ -14,17 +16,17 @@
 
         <div class="mb-3">
             <label for="title" class="form-label">Название</label>
-            <input type="text" name="title" class="form-control" id="title" placeholder="title" maxlength="255">
+            <input type="text" name="title" class="form-control" id="title" maxlength="255">
         </div>
 
         <div class="mb-3">
             <label for="author" class="form-label">Автор</label>
-            <input type="text" name="author" class="form-control" id="author" placeholder="author" maxlength="255">
+            <input type="text" name="author" class="form-control" id="author"  maxlength="255">
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <textarea name="description" class="form-control" id="description" rows="4" placeholder="description" maxlength="2048"></textarea>
+            <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048"></textarea>
         </div>
 
         <div class="mb-3">
