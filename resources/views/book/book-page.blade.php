@@ -4,6 +4,7 @@
     Нужно добавить название сюды
 @endsection
 
+
 @section('content')
     {{ $author }}
 @endsection

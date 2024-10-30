@@ -35,7 +35,6 @@
         </ul>
         <!-- Profile and search -->
         <div class="d-flex align-items-center">
-{{--            <livewire:search-dropdown />--}}
             @auth
                 <a href="#" class="nav-link">
                     Osaka

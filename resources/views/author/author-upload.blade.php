@@ -7,6 +7,8 @@
 
 @section('content')
 
+
+
     <form action="{{ route('author.upload') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         @csrf
 
@@ -14,6 +16,7 @@
             <label for="title" class="form-label">Имя</label>
             <input type="text" name="name" class="form-control" id="title" maxlength="255">
         </div>
+
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>

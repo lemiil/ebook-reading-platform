@@ -5,51 +5,59 @@
 @endsection
 @section('content')
 
-    <h1>Осака перемудрила и теперь этоа форма нифига не работает. Переделай :3</h1>
+    <h1>Осака перемудрила, и теперь эта форма не работает. Исправьте это, пожалуйста! :3</h1>
     <form action="{{ route('book.upload') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         @csrf
         <div class="mb-3">
             <label class="form-label text-muted">
-                Заполнять поля с автором, названием, жанрами и описанием вовсе не обязятельно! Тем не менее, желательно. Если в книге отсуствует необходимые метаданные - вы получите ошибку.
+                Заполнение полей с автором, названием, жанрами и описанием не является обязательным, но рекомендуется. Если в книге отсутствуют необходимые метаданные, вы получите ошибку.
             </label>
         </div>
 
         <div class="mb-3">
             <label for="title" class="form-label">Название</label>
-            <input type="text" name="title" class="form-control" id="title" maxlength="255">
+            <input type="text" name="title" class="form-control" id="title" maxlength="255" placeholder="Введите название книги">
         </div>
 
         <div class="mb-3">
+            <div class="formf" style="display: flex; justify-content: space-between">
             <label for="author" class="form-label">Автор</label>
-            <input type="text" name="author" class="form-control" id="author"  maxlength="255">
+            <a href="#" target="_blank">Добавить нового автора</a>
+            </div>
+            @livewire('show-authors')
         </div>
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048"></textarea>
+            <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048" placeholder="Введите описание книги"></textarea>
         </div>
 
         <div class="mb-3">
             <label for="genres" class="form-label">Жанры</label>
-            @foreach($genres as $genre)
-                <div class="form-check">
-                    <input type="checkbox" name="genres[]" id="genre-{{ $genre->id }}" class="form-check-input" value="{{ $genre->id }}">
-                    <label class="form-check-label" for="genre-{{ $genre->id }}">{{ $genre->name }}</label>
+            <div class="ps-3">
+                <div class="row g-3">
+                    @foreach($genres as $genre)
+                        <div class="col-6 col-md-4 col-lg-3">
+                            <div class="form-check">
+                                <input type="checkbox" name="genres[]" id="genre-{{ $genre->id }}" class="form-check-input" value="{{ $genre->id }}">
+                                <label class="form-check-label" for="genre-{{ $genre->id }}">{{ $genre->name }}</label>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
+            </div>
         </div>
-
 
         <div class="mb-3">
             <label for="book" class="form-label">Загрузить файл</label>
             <input type="file" name="book" class="form-control" required accept=".fb2,.epub,.pdf" id="book">
         </div>
 
-        <button type="submit" class="btn btn-primary">Upload</button>
+        <button type="submit" class="btn btn-primary">Загрузить</button>
     </form>
 
 
-@if ($errors->any())
+    @if ($errors->any())
     <ul>
         @foreach ($errors->all() as $error)
             <li>{{ $error }}</li>
