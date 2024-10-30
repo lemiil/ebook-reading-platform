@@ -4,20 +4,21 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::create('books', function (Blueprint $table) {
+        Schema::create('book_files', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('author_id')->nullable();
-            $table->integer('year')->nullable();
-            $table->string('title');
-            $table->string('description', 2048)->nullable();
+            $table->foreignId('book_id')->constrained()->onDelete('cascade');
+            $table->string('file_path');
+            $table->string('format');
             $table->timestamps();
         });
+
     }
 
     /**
@@ -25,6 +26,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('books');
+        Schema::dropIfExists('book_files');
     }
 };

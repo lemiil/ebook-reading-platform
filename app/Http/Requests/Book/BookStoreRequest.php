@@ -25,9 +25,9 @@ class BookStoreRequest extends FormRequest
 
         return [
             // Allow octet-stream and epub, but check the file extension
-            'book' => [
+            'book' => 'required|array|min:1',
+            'book.*' => [
                 'nullable',
-                'required',
                 'file',
                 "extensions:fb2,epub,pdf",
                 'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2,application/pdf',
@@ -48,7 +48,13 @@ class BookStoreRequest extends FormRequest
                 'string',
                 'max:2048',
             ],
-            'genres',
+            'genres' => [
+                'nullable'
+            ],
+            'year' => [
+                'nullable',
+                'integer'
+            ]
         ];
     }
 }

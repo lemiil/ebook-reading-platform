@@ -18,28 +18,35 @@ class BookUploadController extends Controller
         $genres = Genre::all();
         return view("book/book-upload", compact('genres'));
     }
-//TODO переработать систему добавления книг на навороченную, без парсинга автора из метаданных. Так же добавить год издания. Заняться этим после реализации авторов.
-//TODO ПОЛНОСТЬЮ ЭТО ВСЁ ПЕРЕДЕЛАТЬ(
+
     public function store(BookStoreRequest $request)
     {
-        $directoryName = date("d-m-Y");
-
         try {
-            $path = $this->storeFile($request, $directoryName);
-            $bookData = $this->extractBookData($path);
 
+
+            foreach ($request->input('book') as $book) {
+                $path = $this->storeFile($book);
+                $bookData = $this->extractBookData($path);
+                $book->files()->create([
+                    'file_path' => $path,
+                    'format' => $book->extension(),
+                ]);
+            }
             $book = Book::create($bookData);
             if ($request->has('genres')) {
                 $book->genres()->attach($request->genres);
             }
-            return redirect()->route('book.upload.view')->with('bookisuploaded', 'true');
+
+
+            return redirect()->route('book.upload.view')->with('bookisuploaded', 'Книга успешно загружена. Вы молодец.');
         } catch (Exception $e) {
             return redirect()->route('book.upload.view')->withErrors('Ошибка при загрузке книги: ' . $e->getMessage());
         }
     }
 
-    private function storeFile($request, $directoryName)
+    private function storeFile($request)
     {
+        $directoryName = date("d-m-Y");
         $file = $request->file('book');
         $extension = $file->getClientOriginalExtension();
         $fileName = uniqid() . '.' . $extension;
@@ -60,19 +67,17 @@ class BookUploadController extends Controller
 
         $author = request()->input('author') ?? $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
         $title = request()->input('title') ?? $this->parseXmlElement($xml->find('book-title'));
+        $year = request()->input('title') ?? $this->parseXmlElement($xml->find('year'));
+        $description = request()->input('description') ?? $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
 
         if (!$title || !$author) {
             throw new Exception('Отсутствует название или автор!');
         }
-
-        $description = request()->input('description') ?? $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
-
         return [
             'title' => $title,
             'author' => $author,
-            'description' => $description ?: null,
-            'format' => 'fb2',
-            'path' => $path,
+            'description' => $description,
+            'year' => $year,
         ];
     }
 
@@ -83,6 +88,7 @@ class BookUploadController extends Controller
         $title = request()->input('title') ?? $ebook->getTitle();
         $author = request()->input('author') ?? $ebook->getAuthorMain();
         $description = request()->input('description') ?? $ebook->getDescription();
+        $year = request()->input('year') ?? $ebook->getPublishDate();
 
         if (!$title || !$author) {
             throw new Exception('Отсутствует название или автор!');
@@ -91,9 +97,8 @@ class BookUploadController extends Controller
         return [
             'title' => $title,
             'author' => $author,
-            'path' => $path,
-            'format' => $ebook->getFormat(),
             'description' => $description,
+            'year' => $year,
         ];
     }
 

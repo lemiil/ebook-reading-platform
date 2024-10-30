@@ -9,7 +9,7 @@ class Book extends Model
 {
 
     use HasFactory;
-    protected $fillable = ['title', 'author', 'path', 'description', 'format'];
+    protected $fillable = ['title', 'author', 'description', 'year'];
 
     public function genres()
     {
@@ -18,6 +18,11 @@ class Book extends Model
 
     public function authors() {
         return $this->belongsTo(Author::class);
+    }
+
+    public function files()
+    {
+        return $this->hasMany(BookFile::class);
     }
 
 }
