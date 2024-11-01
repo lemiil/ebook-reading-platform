@@ -2,32 +2,29 @@
 
 namespace App\Livewire;
 
-use App\Models\Author;
 use Livewire\Component;
+use App\Models\Author;
+
+// замените на вашу модель
 
 class ShowAuthors extends Component
 {
     public $query = '';
-    public $authors = [];
+    public $results = [];
+    public $selectedResult = null;
 
     public function updatedQuery()
     {
         if (strlen($this->query) >= 2) {
-            $this->authors = Author::where('name', 'like', '%' . $this->query . '%')->get()->toArray();
-        } else {
-            $this->authors = [];
+            $this->results = Author::where('name', 'like', '%' . $this->query . '%')->limit(7)->get();
         }
     }
 
-    public function selectAuthor($name)
+    public function selectResult($id)
     {
-        $this->query = $name;
-        $this->clearResults();
-    }
-
-    public function clearResults()
-    {
-        $this->authors = [];
+        $this->selectedResult = Author::find($id);
+        $this->query = $this->selectedResult->name;
+        $this->results = [];
     }
 
     public function render()
@@ -35,3 +32,4 @@ class ShowAuthors extends Component
         return view('livewire.show-authors');
     }
 }
+

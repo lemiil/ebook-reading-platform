@@ -36,6 +36,11 @@
         </div>
 
         <div class="mb-3">
+            <label for="year" class="form-label">Год издания</label>
+            <input type="number" name="year" id="">
+        </div>
+
+        <div class="mb-3">
             <label for="genres" class="form-label">Жанры</label>
             <div class="ps-3">
                 <div class="row g-3">
@@ -51,21 +56,12 @@
                 </div>
             </div>
         </div>
+
         <div class="formf" style="display: flex; justify-content: space-between">
             <div class="mb-3">
-                <label for="fb2File" class="block text-gray-700">FB2:</label>
-                <input type="file" name="book[]" id="fb2File" class="border rounded w-full py-2 px-3" accept=".fb2"
-                >
-            </div>
-            <div class="mb-3">
-                <label for="epubFile" class="block text-gray-700">Epub:</label>
-                <input type="file" name="book[]" id="epubFile" class="border rounded w-full py-2 px-3" accept=".epub"
-                >
-            </div>
-            <div class="mb-3">
-                <label for="pdfFile" class="block text-gray-700">PDF:</label>
-                <input type="file" name="book[]" id="pdfFile" class="border rounded w-full py-2 px-3" accept=".pdf"
-                >
+                <label for="bookFiles" class="block text-gray-700">Upload Files (FB2, EPUB, PDF):</label>
+                <input type="file" name="book[]" id="bookFiles" class="border rounded w-full py-2 px-3"
+                       accept=".fb2,.epub,.pdf" multiple>
             </div>
         </div>
 

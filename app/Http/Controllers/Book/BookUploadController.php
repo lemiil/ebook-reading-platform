@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Book\BookStoreRequest;
+use App\Models\Author;
 use App\Models\Book;
 use App\Models\Genre;
 use Exception;
@@ -22,21 +23,42 @@ class BookUploadController extends Controller
     public function store(BookStoreRequest $request)
     {
         try {
+            if ($request->hasFile('book')) {
+                $firstFile = $request->file('book')[0];
+                $filePath = $this->storeFile($firstFile);
+                $bookData = $this->extractBookData($filePath);
 
+                if ($request->has('author')) {
+                    $authorName = $request->author;
+                    $author = Author::where('name', $authorName)->first();
 
-            foreach ($request->input('book') as $book) {
-                $path = $this->storeFile($book);
-                $bookData = $this->extractBookData($path);
+                    if ($author) {
+                        $bookData['author_id'] = $author->id;
+                    } else {
+                        return redirect()->route('book.upload.view')->withErrors('Автор не найден: ' . $authorName);
+                    }
+                } else {
+                    return redirect()->route('book.upload.view')->withErrors('Не указан автор.');
+                }
+                
+                $book = Book::create($bookData);
+
                 $book->files()->create([
-                    'file_path' => $path,
-                    'format' => $book->extension(),
+                    'file_path' => $filePath,
+                    'format' => $firstFile->getClientOriginalExtension(),
                 ]);
-            }
-            $book = Book::create($bookData);
-            if ($request->has('genres')) {
-                $book->genres()->attach($request->genres);
-            }
 
+                foreach (array_slice($request->file('book'), 1) as $file) {
+                    $filePath = $this->storeFile($file);
+                    $book->files()->create([
+                        'file_path' => $filePath,
+                        'format' => $file->getClientOriginalExtension(),
+                    ]);
+                }
+                if ($request->has('genres')) {
+                    $book->genres()->attach($request->genres);
+                }
+            }
 
             return redirect()->route('book.upload.view')->with('bookisuploaded', 'Книга успешно загружена. Вы молодец.');
         } catch (Exception $e) {
@@ -44,10 +66,10 @@ class BookUploadController extends Controller
         }
     }
 
-    private function storeFile($request)
+
+    private function storeFile($file)
     {
         $directoryName = date("d-m-Y");
-        $file = $request->file('book');
         $extension = $file->getClientOriginalExtension();
         $fileName = uniqid() . '.' . $extension;
 
@@ -58,57 +80,46 @@ class BookUploadController extends Controller
     {
         $extension = pathinfo($path, PATHINFO_EXTENSION);
 
-        return $extension === 'fb2' ? $this->extractFb2Data($path) : $this->extractEpubData($path);
+        return $extension === 'fb2' ? $this->extractFb2Data($path) : $this->extractOtherEbookData($path);
     }
 
     private function extractFb2Data($path)
     {
         $xml = XmlReader::make(Storage::path($path));
 
-        $author = request()->input('author') ?? $this->parseAuthor($xml->find('first-name'), $xml->find('last-name'));
         $title = request()->input('title') ?? $this->parseXmlElement($xml->find('book-title'));
-        $year = request()->input('title') ?? $this->parseXmlElement($xml->find('year'));
         $description = request()->input('description') ?? $this->parseXmlElement($xml->find('annotation')['p'] ?? null);
+        $year = request()->input('year') ?? null;
 
-        if (!$title || !$author) {
+        if (!$title) {
             throw new Exception('Отсутствует название или автор!');
         }
         return [
             'title' => $title,
-            'author' => $author,
             'description' => $description,
-            'year' => $year,
+            'year' => $year
         ];
     }
 
-    private function extractEpubData($path)
+    private function extractOtherEbookData($path)
     {
         $ebook = Ebook::read(Storage::path($path));
 
         $title = request()->input('title') ?? $ebook->getTitle();
-        $author = request()->input('author') ?? $ebook->getAuthorMain();
         $description = request()->input('description') ?? $ebook->getDescription();
-        $year = request()->input('year') ?? $ebook->getPublishDate();
+        $year = request()->input('year') ?? null;
 
-        if (!$title || !$author) {
+        if (!$title) {
             throw new Exception('Отсутствует название или автор!');
         }
 
         return [
             'title' => $title,
-            'author' => $author,
             'description' => $description,
             'year' => $year,
         ];
     }
 
-    private function parseAuthor($firstName, $lastName)
-    {
-        $firstName = is_array($firstName) ? implode(' ', $firstName) : ($firstName ?? '');
-        $lastName = is_array($lastName) ? implode(' ', $lastName) : ($lastName ?? '');
-
-        return trim("$firstName $lastName") ?: null;
-    }
 
     private function parseXmlElement($element)
     {
