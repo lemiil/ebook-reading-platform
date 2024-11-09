@@ -8,6 +8,7 @@ use App\Models\Book;
 use App\Models\Tag;
 use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class BookUploadService
 {
@@ -67,7 +68,8 @@ class BookUploadService
         $directoryName = date("d-m-Y");
         $extension = $file->getClientOriginalExtension();
         $fileName = uniqid() . '.' . $extension;
-
-        return $file->storeAs("public/books/$directoryName", $fileName);
+        $path = $file->storeAs("public/books/$directoryName", $fileName);
+        asset($path);
+        dd($path);
     }
 }

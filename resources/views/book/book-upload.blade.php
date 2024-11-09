@@ -34,8 +34,10 @@
 
         <div class="mb-3">
             <label for="description" class="form-label">Описание</label>
-            <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048"
+
+            <textarea name="description" class="form-control description" id="description" rows="4" maxlength="2048"
                       placeholder="Введите описание книги"></textarea>
+
         </div>
 
         <div class="mb-3">
@@ -78,6 +80,12 @@
                     const tagText = tagInput.value.trim();
                     addTag(tagText);
                     tagInput.value = '';
+                }
+            });
+            document.getElementById('description').addEventListener('keydown', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    this.value += '\n';
                 }
             });
 

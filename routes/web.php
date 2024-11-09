@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\AuthorController;
+use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookReadController;
 use App\Livewire\ShowAuthors;
@@ -25,10 +25,10 @@ Route::get(
     [BookUploadController::class, 'index']
 )->name('book.upload.view');
 //Route::middleware(['auth'])->group(function () {
-    Route::post(
-        '/book/upload',
-        [BookUploadController::class, 'store']
-    )->name('book.upload');
+Route::post(
+    '/book/upload',
+    [BookUploadController::class, 'store']
+)->name('book.upload');
 //});
 
 Route::get(

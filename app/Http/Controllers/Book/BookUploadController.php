@@ -33,5 +33,6 @@ class BookUploadController extends Controller
         } catch (Exception $e) {
             return redirect()->route('book.upload.view')->withErrors('Ошибка при загрузке книги: ' . $e->getMessage());
         }
+
     }
 }

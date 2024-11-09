@@ -20,7 +20,7 @@ class Book extends Model
         return $this->belongsToMany(Tag::class);
     }
 
-    public function authors()
+    public function author()
     {
         return $this->belongsTo(Author::class);
     }
