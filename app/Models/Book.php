@@ -10,9 +10,15 @@ class Book extends Model
 
     protected $fillable = ['title', 'description', 'year', 'author_id'];
 
+
     public function genres()
     {
         return $this->belongsToMany(Genre::class);
+    }
+
+    public function cover()
+    {
+        return $this->hasOne(BookCover::class);
     }
 
     public function tags()

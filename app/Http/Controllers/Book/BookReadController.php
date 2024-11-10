@@ -21,26 +21,24 @@ class BookReadController extends Controller
 
     public function pageShow(Book $book)
     {
-        $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path);
-        if ($path) {
-            $ebook = Ebook::read($path);
-        }
-        $cover = $ebook->getCover();
-        dd($cover);
-//
-//        return $cover->getPath();
-
-//        return view('book.book-page', $this->bookResponse($book));
+        return view('book.book-page', $this->bookResponse($book));
     }
 
     protected function bookResponse(Book $book): array
     {
-        $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path);
+        try {
+            $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path) ?? null;
+        } catch (\Exception $e) {
+            $path = null;
+        }
         if ($path) {
             $ebook = Ebook::read($path);
+            $cover = $ebook->getCover();
+            $cover = $cover->getContents(true);
         }
         return [
             'title' => $book->title,
+            'cover' => $cover ?? null,
             'description' => $book->description,
         ];
     }

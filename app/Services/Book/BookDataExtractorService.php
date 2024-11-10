@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Support\Facades\Storage;
 use Kiwilan\Ebook\Ebook;
 use Kiwilan\XmlReader\XmlReader;
+use Mews\Purifier\Purifier;
 
 class BookDataExtractorService
 {

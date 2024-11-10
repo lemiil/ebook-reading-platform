@@ -36,6 +36,20 @@ class BookUploadService
 
         $book = Book::create($bookData);
 
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+
+            $directoryName = date("d-m-Y");
+            $extension = $cover->getClientOriginalExtension();
+            $fileName = uniqid() . '.' . $extension;
+            $path = $cover->storeAs("public/covers/$directoryName", $fileName);
+
+            $book->cover()->create([
+                'file_path' => $path,
+            ]);
+        }
+
+
         $book->files()->create([
             'file_path' => $filePath,
             'format' => $firstFile->getClientOriginalExtension(),
@@ -70,6 +84,6 @@ class BookUploadService
         $fileName = uniqid() . '.' . $extension;
         $path = $file->storeAs("public/books/$directoryName", $fileName);
         asset($path);
-        dd($path);
+        return $path;
     }
 }

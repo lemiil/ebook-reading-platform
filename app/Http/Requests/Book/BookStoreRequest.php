@@ -21,17 +21,15 @@ class BookStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-        $maxFileSize = env('MAX_BOOK_SIZE');
 
         return [
-            // Allow octet-stream and epub, but check the file extension
             'book' => 'required|array|min:1',
             'book.*' => [
                 'nullable',
                 'file',
                 "extensions:fb2,epub,pdf",
                 'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2,application/pdf',
-                "max:$maxFileSize",
+                "max:10000",
             ],
             'title' => [
                 'nullable',
@@ -53,7 +51,15 @@ class BookStoreRequest extends FormRequest
             ],
             'year' => [
                 'nullable',
-                'integer'
+                'integer',
+                'min:0',
+                'max:2100',
+            ],
+            'cover' => [
+                'nullable',
+                'file',
+                'mimes:png,jpg,jpeg,webp',
+                "max:10000",
             ]
         ];
     }

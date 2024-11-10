@@ -1,6 +1,7 @@
 <div>
     <input type="text" wire:model.live.debounce.500ms="query" name="author"
            placeholder="Начните вводить имя автора"
+           required
            class="form-control"/>
 
     @if(!empty($results))
