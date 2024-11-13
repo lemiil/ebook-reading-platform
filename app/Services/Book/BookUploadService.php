@@ -42,8 +42,8 @@ class BookUploadService
             $directoryName = date("d-m-Y");
             $extension = $cover->getClientOriginalExtension();
             $fileName = uniqid() . '.' . $extension;
-            $path = $cover->storeAs("public/covers/$directoryName", $fileName);
-
+            $cover->move(public_path('covers/' . $directoryName), $fileName);
+            $path = 'covers/' . $directoryName . '/' . $fileName;
             $book->cover()->create([
                 'file_path' => $path,
             ]);
@@ -54,13 +54,14 @@ class BookUploadService
             'file_path' => $filePath,
             'format' => $firstFile->getClientOriginalExtension(),
         ]);
-
-        foreach (array_slice($request->file('book'), 1) as $file) {
-            $filePath = $this->storeFile($file);
-            $book->files()->create([
-                'file_path' => $filePath,
-                'format' => $file->getClientOriginalExtension(),
-            ]);
+        if ($request->file('book') >= 2) {
+            foreach (array_slice($request->file('book'), 1) as $file) {
+                $filePath = $this->storeFile($file);
+                $book->files()->create([
+                    'file_path' => $filePath,
+                    'format' => $file->getClientOriginalExtension(),
+                ]);
+            }
         }
 
         if ($request->has('genres')) {
@@ -82,8 +83,9 @@ class BookUploadService
         $directoryName = date("d-m-Y");
         $extension = $file->getClientOriginalExtension();
         $fileName = uniqid() . '.' . $extension;
-        $path = $file->storeAs("public/books/$directoryName", $fileName);
-        asset($path);
+        $file->move(public_path('books/' . $directoryName), $fileName);
+        $path = "public/books/$directoryName/$fileName";
+
         return $path;
     }
 }

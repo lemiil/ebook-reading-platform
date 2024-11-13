@@ -84,12 +84,13 @@
     @if ($errors->any())
         <ul class="alert alert-danger mt-3">
             @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
+                <p>{{ $error }}</p>
             @endforeach
         </ul>
     @endif
 
     @if (session()->has('bookisuploaded'))
-        <p class="text-success">Книга успешно загружена. Вы молодец.</p>
+        <div class="alert success">{{ session('bookisuploaded') }}</div>
     @endif
+
 </div>
