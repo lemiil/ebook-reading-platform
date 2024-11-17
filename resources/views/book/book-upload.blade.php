@@ -5,7 +5,6 @@
 @endsection
 
 @section('content')
-    <img src="{{ asset('storage/covers/16-11-2024/6738814fc4589.png') }}">
 
     @include('book.forms.book-form')
 

@@ -26,21 +26,33 @@ class BookReadController extends Controller
 
     protected function bookResponse(Book $book): array
     {
+        $coverBASE64 = null;
+
         try {
-            $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path) ?? null;
+            $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path);
         } catch (\Exception $e) {
             $path = null;
         }
+
         if ($path) {
             $ebook = Ebook::read($path);
             $cover = $ebook->getCover();
-            $cover = $cover->getContents(true);
+            if ($cover) {
+                $coverBASE64 = $cover->getContents(true);
+            }
         }
+
         return [
             'title' => $book->title,
-            'cover' => $cover ?? null,
-            'description' => $book->description,
+            'author' => $book->author()->first()?->name ?? null,
+            'genres' => $book->genres()->pluck('name') ?: null,
+            'year' => $book->year ?? null,
+            'tags' => $book->tags()->pluck('name') ?: null,
+            'coverBASE64' => $coverBASE64,
+            'cover' => $book->cover()->first()?->file_path ?? null,
+            'description' => $book->description ?? null,
         ];
     }
+
 
 }
