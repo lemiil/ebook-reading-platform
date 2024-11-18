@@ -1,5 +1,5 @@
 <div class="container mt-5" style="max-width: 700px; margin: auto;">
-    <form onkeydown="if(event.keyCode === 13) { return false; }" action="{{ route('book.upload') }}" method="POST"
+    <form action="{{ route('book.upload') }}" method="POST"
           id="bookForm" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         @csrf
         <div class="mb-3">
@@ -21,9 +21,7 @@
                 <label for="author" class="form-label">Автор</label>
                 <a href="#" target="_blank">Добавить нового автора</a>
             </div>
-            <div>
-                @livewire('show-authors')
-            </div>
+            <select id="author-select" name="authors[]" multiple="multiple" class="form-control"></select>
         </div>
 
         <div class="mb-3">
@@ -52,13 +50,9 @@
                 @endforeach
             </div>
         </div>
-
         <div class="mb-3">
             <label for="tags" class="form-label">Теги</label>
-            <div class="tag-container" id="tag-container">
-                <input type="text" class="tag-input form-control" id="tag-input" placeholder="Добавить тег">
-            </div>
-            <input type="hidden" name="tags" id="tags">
+            <select id="tag-select" name="tags[]" multiple="multiple" class="form-control"></select>
         </div>
 
         <div class="mb-3 d-flex align-items-center">
@@ -78,9 +72,9 @@
                    multiple>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100" style="max-width: 150px; margin: auto">Загрузить
-        </button>
+        <button type="submit" class="btn btn-primary w-100" style="max-width: 150px; margin: auto">Загрузить</button>
     </form>
+
     @if ($errors->any())
         <ul class="alert alert-danger mt-3">
             @foreach ($errors->all() as $error)
@@ -92,5 +86,64 @@
     @if (session()->has('bookisuploaded'))
         <div class="alert success">{{ session('bookisuploaded') }}</div>
     @endif
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/css/select2.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-beta.1/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.3/js/i18n/ru.js"></script>
+
+<script>
+
+    $(document).ready(function () {
+        $('#author-select').select2({
+            language: 'ru',
+            placeholder: {
+                id: '-1', // the value of the option
+                text: ' Начните вводить имя автора'
+            },
+            ajax: {
+                url: '/api/authors/search',
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        query: params.term
+                    };
+                },
+                processResults: function (data) {
+                    return {
+                        results: data.map(author => ({
+                            id: author.id,
+                            text: author.name
+                        }))
+                    };
+                },
+                cache: true
+            },
+            minimumInputLength: 1
+        });
+
+        $('#tag-select').select2({
+            language: "ru",
+            tags: true,
+            placeholder: 'Добавить тег',
+            tokenSeparators: [',', ' '],
+            createTag: function (params) {
+                return {
+                    id: params.term,
+                    text: params.term,
+                    newOption: true
+                };
+            },
+            insertTag: function (data, tag) {
+                data.push(tag);
+            }
+        });
+
+
+    });
+</script>
+
 
 </div>

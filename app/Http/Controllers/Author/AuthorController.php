@@ -19,4 +19,15 @@ class AuthorController extends Controller
         Author::create($request->validated());
         return redirect()->route('author.upload.view')->with('success', 'Author created successfully.');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->get('query', '');
+
+        $authors = Author::where('name', 'LIKE', '%' . $query . '%')
+            ->limit(10)
+            ->get(['id', 'name']);
+
+        return response()->json($authors);
+    }
 }
