@@ -10,16 +10,18 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('book_covers', function (Blueprint $table) {
-            $table->id();
+        Schema::create('author_book', function (Blueprint $table) {
             $table->foreignId('book_id')->constrained()->onDelete('cascade');
-            $table->string('file_path');
-            $table->timestamps();
+            $table->foreignId('author_id')->constrained()->onDelete('cascade');
+            $table->primary(['book_id', 'author_id']);
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('book_cover');
+        Schema::dropIfExists('author_book');
     }
 };

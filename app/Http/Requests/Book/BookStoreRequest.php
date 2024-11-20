@@ -29,21 +29,26 @@ class BookStoreRequest extends FormRequest
                 'file',
                 "extensions:fb2,epub,pdf",
                 'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2,application/pdf',
+                'min:1',
                 "max:10000",
             ],
             'title' => [
                 'nullable',
                 'string',
+                'min:1',
                 'max:255',
             ],
-            'author' => [
+            'authors' => 'required|array|min:1',
+            'authors.*' => [
                 'nullable',
                 'string',
+                'min:1',
                 'max:255',
             ],
             'description' => [
                 'nullable',
                 'string',
+                'min:1',
                 'max:2048',
             ],
             'genres' => [
@@ -59,7 +64,17 @@ class BookStoreRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimes:png,jpg,jpeg,webp',
+                'min:1',
                 "max:10000",
+            ],
+            'tags' => [
+                'nullable',
+                'array',
+            ],
+            'tags.*' => [
+                'string',
+                'min:1',
+                'max:32',
             ]
         ];
     }

@@ -3,6 +3,7 @@
 
 namespace App\Services\Book;
 
+use App\Http\Requests\Book\BookStoreRequest;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\Tag;
@@ -18,8 +19,9 @@ class BookUploadService
         $this->dataExtractor = $dataExtractor;
     }
 
-    public function uploadBook($request)
+    public function uploadBook(BookStoreRequest $request)
     {
+
         $files = $request->file('book');
         if (empty($files)) {
             throw new Exception('Файлы для загрузки не найдены.');
@@ -27,21 +29,22 @@ class BookUploadService
 
         $filePath = $this->storeFile($files[0]);
         $bookData = $this->dataExtractor->extractData($filePath, $request);
-        $author = Author::firstWhere('name', $request->author);
 
-        if (!$author) {
-            throw new Exception('Автор не найден: ' . $request->author);
-        }
-
-        $bookData['author_id'] = $author->id;
         $book = Book::create($bookData);
 
-        if ($request->hasFile('cover')) {
-            $this->storeCover($request->file('cover'), $book);
-        }
+        $this->storeCover($book, $request);
+        $this->storeAllFiles($book, $files);
+        $this->attachGenres($book, $request);
+        $this->attachTags($book, $request);
+        $this->attachAuthors($book, $request);
 
+        return $book;
+    }
+
+    private function storeAllFiles($book, $files)
+    {
         foreach ($files as $index => $file) {
-            if ($index > 0 || $files[0]) { // Сохраняем все файлы, включая первый
+            if ($index > 0 || $files[0]) {
                 $filePath = $this->storeFile($file);
                 $book->files()->create([
                     'file_path' => $filePath,
@@ -49,17 +52,18 @@ class BookUploadService
                 ]);
             }
         }
-
-        $this->attachGenres($book, $request);
-        $this->attachTags($book, $request);
-
-        return $book;
     }
 
-    private function storeCover(UploadedFile $cover, $book)
+
+    private function storeCover($book, $request)
     {
-        $path = $this->storeFileWithPath($cover, 'covers');
-        $book->cover()->create(['file_path' => $path]);
+        if ($request->hasFile('cover')) {
+            $cover = $request->file('cover');
+            $path = $this->storeFileWithPath($cover, 'covers');
+            $book->cover_path = $path;
+            $book->save();
+        }
+
     }
 
     private function storeFile(UploadedFile $file, $directory = 'books'): string
@@ -86,11 +90,24 @@ class BookUploadService
     private function attachTags($book, $request)
     {
         if ($request->has('tags')) {
-            $tags = json_decode($request->tags, true);
+            $tags = $request->tags;
             foreach ($tags as $tag) {
                 $existingTag = Tag::firstOrCreate(['name' => $tag]);
                 $book->tags()->attach($existingTag->id);
             }
         }
     }
+
+    private function attachAuthors($book, $request)
+    {
+        $authors = $request->authors;
+        foreach ($authors as $authorId) {
+            $author = Author::find($authorId);
+            if ($author) {
+                $book->authors()->attach($author->id);
+            }
+        }
+    }
+
+
 }

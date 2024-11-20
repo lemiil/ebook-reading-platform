@@ -99,7 +99,7 @@
         $('#author-select').select2({
             language: 'ru',
             placeholder: {
-                id: '-1', // the value of the option
+                id: '-1',
                 text: ' Начните вводить имя автора'
             },
             ajax: {
@@ -127,17 +127,34 @@
         $('#tag-select').select2({
             language: "ru",
             tags: true,
-            placeholder: 'Добавить тег',
-            tokenSeparators: [',', ' '],
+            tokenSeparators: [','],
             createTag: function (params) {
+                const term = $.trim(params.term);
+                if (term.length > 32) {
+                    return null;
+                }
+
                 return {
-                    id: params.term,
-                    text: params.term,
+                    id: term,
+                    text: term,
                     newOption: true
                 };
             },
             insertTag: function (data, tag) {
-                data.push(tag);
+                if (data.length >= 20) {
+                    return false;
+                } else {
+                    data.push(tag);
+                }
+            }
+        });
+        $('#tag-select').on('select2:select', function (e) {
+            const data = $(this).select2('data');
+            if (data.length > 20) {
+                const lastTagId = data[data.length - 1].id;
+                const tags = $(this).val();
+                tags.pop();
+                $(this).val(tags).trigger('change');
             }
         });
 

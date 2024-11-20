@@ -81,8 +81,5 @@
     }
 </style>
 
-<!-- Livewire и Bootstrap JS -->
-<livewire:scripts/>
-@yield('scripts')
 </body>
 </html>

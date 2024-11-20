@@ -3,7 +3,6 @@
 use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookReadController;
-use App\Livewire\ShowAuthors;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'main');
@@ -35,7 +34,5 @@ Route::get(
     '/book/{book?}',
     [BookReadController::class, 'pageShow']
 )->name('book');
-
-Route::get('/show/authors', ShowAuthors::class);
 
 require __DIR__ . '/auth.php';
