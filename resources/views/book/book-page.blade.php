@@ -31,7 +31,10 @@
                             </div>
                             <div class="col-md-8 p-4">
                                 <h4 class="fw-bold">{{ $title }}</h4>
-                                <h5 class="text-muted">{{ $author }}</h5>
+                                @foreach($authors as $author)
+                                    <h5 class="text-muted">{{ $author }}</h5>
+                                @endforeach
+
                                 @if(isset($genres))
                                     <p class="text-muted">
                                         @foreach($genres as $genre)
@@ -44,7 +47,7 @@
                                         <strong>Год издания:</strong> {{ $year }}
                                     </p>
                                 @endif
-                                
+
                                 @if (isset($tags))
                                     <p class="text-muted">
                                         <strong>Теги:</strong>

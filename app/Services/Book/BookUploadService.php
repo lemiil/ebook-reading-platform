@@ -43,6 +43,7 @@ class BookUploadService
 
     private function storeAllFiles($book, $files)
     {
+        $files = array_shift($files);
         foreach ($files as $index => $file) {
             if ($index > 0 || $files[0]) {
                 $filePath = $this->storeFile($file);

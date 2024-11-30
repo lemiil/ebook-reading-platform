@@ -1,11 +1,16 @@
 <?php
 
 use App\Http\Controllers\Author\AuthorController;
+use App\Http\Controllers\Book\BookReaderController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookReadController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'main');
+Route::view('/', 'main')->name('home');
+
+Route::get(
+    '/read/{book?}', [BookReaderController::class, 'index']
+)->name('book.reader');
 
 Route::get(
     '/author/upload',
