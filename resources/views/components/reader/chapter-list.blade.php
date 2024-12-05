@@ -1,21 +1,22 @@
-<ul>
-    @foreach ($chapters as $key => $chapter)
-        @if (isset($chapter['title']['p']))
-
-            <strong>
-                @if (is_array($chapter['title']['p']))
-                    @foreach ($chapter['title']['p'] as $titlePart)
+@foreach ($chapters as $key => $chapter)
+    @if (isset($chapter['title']['p']))
+        <li>
+            @if (is_array($chapter['title']['p']))
+                @foreach ($chapter['title']['p'] as $titlePart)
+                    <strong>
                         {{ $titlePart }}
-                    @endforeach
-                @else
+                    </strong>
+                @endforeach
+            @else
+                <strong>
                     {{ $chapter['title']['p'] }}
-                @endif
-            </strong>
+                </strong>
+            @endif
+        </li>
+    @endif
 
-        @endif
+    @if (is_array($chapter))
+        <x-reader.chapter-list :chapters="$chapter"/>
+    @endif
+@endforeach
 
-        @if (is_array($chapter))
-            <x-reader.chapter-list :chapters="$chapter"/>
-        @endif
-    @endforeach
-</ul>

@@ -1,20 +1,29 @@
 <div>
     @foreach ($chapters as $key => $chapter)
-        <strong>
-            @if (isset($chapter['title']['p']))
-                @if(is_array($chapter['title']['p']))
-                    @foreach ($chapter['title']['p'] as $titlePart)
+        @if (isset($chapter['title']['p']))
+            @if (is_array($chapter['title']['p']))
+                @foreach ($chapter['title']['p'] as $titlePart)
+                    <strong>
                         {{ $titlePart }}
-                    @endforeach
-                @else
+                    </strong>
+                    @php
+                        $titlePart = '';
+                    @endphp
+                @endforeach
+            @else
+                <strong>
                     {{ $chapter['title']['p'] }}
-                @endif
+                </strong>
+                @php
+                    $chapter['title']['p'] = '';
+                @endphp
+                {{--  i hate this--}}
             @endif
-        </strong>
+        @endif
 
-        @if (is_array($chapter) && !isset($chapter['title']['p']))
+        @if (is_array($chapter))
             <x-reader.content :chapters="$chapter"></x-reader.content>
-        @elseif (!is_array($chapter))
+        @else
             <p>{{ $chapter }}</p>
         @endif
     @endforeach

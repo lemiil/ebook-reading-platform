@@ -2,6 +2,8 @@
 
 @section('content')
     <h1>Оглавление</h1>
-    <x-reader.chapter-list :chapters="$chapters"/>
+    <ul>
+        <x-reader.chapter-list :chapters="$chapters"/>
+    </ul>
     <x-reader.content :chapters="$book"/>
 @endsection
