@@ -4,21 +4,22 @@ namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use Tizis\FB2\FB2Controller;
 use Kiwilan\Ebook\Ebook;
-use function MongoDB\BSON\toJSON;
+
 
 class BookReaderController extends Controller
 {
     public function index()
     {
 //        $ebook = Ebook::read('C:\Users\gaval\Downloads\avidreaders.ru__trinadcatyy-3(1).epub');
-        $ebook = Ebook::read('C:\Users\gaval\Downloads\London_Martin-Iden.ABA6eQ.33859.fb2\33859.fb2');
-        $book = $ebook->getParser()?->getFb2()->getParser()->getBody();
-        $bookCopy = $book;
-        $chapters = array_shift($bookCopy);
+        $file = file_get_contents('C:\Users\gaval\Downloads\33859.fb2');
+        $item = new FB2Controller($file);
+        $item->withNotes();
+        $item->startParse();
+        $chapters = $item->getBook()->getChapters();
 
-        return view('reader.reader', compact('book', 'chapters'));
+        return view('reader.reader', compact('chapters'));
 //        dd($epub->getParser()->getBody());
 
     }

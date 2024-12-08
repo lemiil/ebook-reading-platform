@@ -54,7 +54,7 @@
     </nav>
 
     <!-- Content -->
-    <main class="container my-4">
+    <main id='main' class="container my-4">
         @yield('content')
     </main>
 
