@@ -1,4 +1,4 @@
-<div class="container mt-5" style="max-width: 700px; margin: auto;">
+<div class="container w-50">
     <form action="{{ route('book.upload') }}" method="POST"
           id="bookForm" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
         @csrf

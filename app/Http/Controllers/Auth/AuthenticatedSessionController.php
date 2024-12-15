@@ -35,4 +35,12 @@ class AuthenticatedSessionController extends Controller
 
         return response()->noContent();
     }
+
+    /**
+     * Display the login view.
+     */
+    public function create()
+    {
+        return view('auth.login');
+    }
 }

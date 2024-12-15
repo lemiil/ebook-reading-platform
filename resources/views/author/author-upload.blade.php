@@ -1,4 +1,3 @@
-
 @extends('layouts.main')
 
 @section('title')
@@ -7,25 +6,25 @@
 
 @section('content')
 
+    <div class="container w-50">
+        <form action="{{ route('author.upload') }}" method="POST" enctype="multipart/form-data"
+              class="p-4 border rounded bg-light shadow-sm">
+            @csrf
+
+            <div class="mb-3">
+                <label for="title" class="form-label">Имя</label>
+                <input type="text" name="name" class="form-control" id="title" maxlength="255">
+            </div>
 
 
-    <form action="{{ route('author.upload') }}" method="POST" enctype="multipart/form-data" class="p-4 border rounded bg-light shadow-sm">
-        @csrf
+            <div class="mb-3">
+                <label for="description" class="form-label">Описание</label>
+                <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048"></textarea>
+            </div>
 
-        <div class="mb-3">
-            <label for="title" class="form-label">Имя</label>
-            <input type="text" name="name" class="form-control" id="title" maxlength="255">
-        </div>
-
-
-        <div class="mb-3">
-            <label for="description" class="form-label">Описание</label>
-            <textarea name="description" class="form-control" id="description" rows="4" maxlength="2048"></textarea>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Upload</button>
-    </form>
-
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
 
     @if ($errors->any())
         <ul>

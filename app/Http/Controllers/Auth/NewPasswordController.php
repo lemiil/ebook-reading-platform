@@ -50,4 +50,12 @@ class NewPasswordController extends Controller
 
         return response()->json(['status' => __($status)]);
     }
+
+    /**
+     * Display the password reset view.
+     */
+    public function create(Request $request)
+    {
+        return view('auth.reset-password', ['request' => $request]);
+    }
 }

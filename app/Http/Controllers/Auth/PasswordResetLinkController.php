@@ -36,4 +36,13 @@ class PasswordResetLinkController extends Controller
 
         return response()->json(['status' => __($status)]);
     }
+
+    /**
+     * Display the password reset link request view.
+     */
+    public function create()
+    {
+        return view('auth.forgot-password');
+    }
+
 }

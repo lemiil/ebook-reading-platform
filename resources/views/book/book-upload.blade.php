@@ -8,7 +8,7 @@
 
     @include('book.forms.book-form')
 
-    
+
     <style>
         .cursor-pointer {
             cursor: pointer;
