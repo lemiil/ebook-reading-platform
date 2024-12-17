@@ -2,28 +2,38 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\Controller;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
+use Laravel\Socialite\Facades\Socialite;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
-class PasswordController extends Controller
+
+class SocialiteController extends Controller
 {
-    /**
-     * Update the user's password.
-     */
-    public function update(Request $request): RedirectResponse
+    public function googleLogin()
     {
-        $validated = $request->validateWithBag('updatePassword', [
-            'current_password' => ['required', 'current_password'],
-            'password' => ['required', Password::defaults(), 'confirmed'],
-        ]);
+        return Socialite::driver('google')->redirect();
+    }
 
-        $request->user()->update([
-            'password' => Hash::make($validated['password']),
-        ]);
+    public function googleAuth()
+    {
+        try {
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
-        return back()->with('status', 'password-updated');
+            $user = User::firstOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'email_verified_at' => now(),
+                    'password' => bcrypt(str()->random(16)),
+                ]
+            );
+
+            Auth::login($user);
+
+            return redirect()->route('home');
+        } catch (\Exception $e) {
+            return redirect()->route('login')->with('error', 'Ошибка входа через Google.');
+        }
     }
 }

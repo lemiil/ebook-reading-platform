@@ -58,3 +58,8 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+Route::controller(SocialiteController::class)->group(function () {
+    Route::get('/auth/google', 'googleLogin')->name('auth.google');
+    Route::get('/auth/google-callback', 'googleAuth')->name('auth.google-callback');
+});
