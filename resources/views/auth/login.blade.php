@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container w-50">
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('login') }}" class="p-4 border rounded bg-light shadow-sm">
             @csrf
 
             <div class="mb-3">
@@ -37,18 +37,10 @@
                 @endif
             </div>
 
-            <div class="form-check mb-3">
-                <input id="remember_me"
-                       type="checkbox"
-                       class="form-check-input"
-                       name="remember">
-                <label for="remember_me" class="form-check-label">Remember me</label>
-            </div>
-
             <div class="d-flex align-items-center justify-content-between mb-3">
-                {{--            <a href="{{ route('auth.google') }}" class="btn btn-outline-primary">--}}
-                {{--                Login with Google--}}
-                {{--            </a>--}}
+                <a href="{{ route('auth.google') }}" class="btn btn-outline-primary">
+                    Login with Google
+                </a>
 
                 @if (Route::has('password.request'))
                     <a href="{{ route('password.request') }}" class="text-decoration-none small text-muted">

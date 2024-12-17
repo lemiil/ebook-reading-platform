@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="container w-50">
-        <form method="POST" action="{{ route('register') }}">
+        <form method="POST" action="{{ route('register') }}" class="p-4 border rounded bg-light shadow-sm">
             @csrf
 
             <!-- Name -->

@@ -25,15 +25,16 @@ class SocialiteController extends Controller
                 [
                     'name' => $googleUser->getName(),
                     'email_verified_at' => now(),
+                    'google_token' => $googleUser->token,
                     'password' => bcrypt(str()->random(16)),
                 ]
             );
 
-            Auth::login($user);
+            Auth::login($user, true);
 
             return redirect()->route('home');
         } catch (\Exception $e) {
-            return redirect()->route('login')->with('error', 'Ошибка входа через Google.');
+            dd($e->getMessage());
         }
     }
 }

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container w-50">
+    <div class="container w-50 p-4 border rounded bg-light shadow-sm">
         <div class="mb-4 text-sm text-muted">
             Thanks for signing up! Before getting started, could you verify your email address by clicking on the link
             we

@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('content')
-    <div class="container w-50">
+    <div class="container w-50 p-4 border rounded bg-light shadow-sm">
         <div class="mb-4 text-muted small">
             Forgot your password? No problem. Just let us know your email address and we will email you a password reset
             link that will allow you to choose a new one.
