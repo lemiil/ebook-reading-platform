@@ -5,11 +5,11 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
                 <div class="card shadow-sm border-0 rounded">
-                    <form method="POST" action="{{ route('register') }}" class="p-4 border rounded bg-light shadow-sm">
+                    <form method="POST" action="{{ route('register') }}" class="form-control">
                         @csrf
 
                         <!-- Name -->
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="name" class="form-label">Name</label>
                             <input id="name"
                                    type="text"
@@ -26,7 +26,7 @@
                             @endif
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="email" class="form-label">Email</label>
                             <input id="email"
                                    type="email"
@@ -42,7 +42,7 @@
                             @endif
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="password" class="form-label">Password</label>
                             <input id="password"
                                    type="password"
@@ -57,7 +57,7 @@
                             @endif
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-2">
                             <label for="password_confirmation" class="form-label">Confirm Password</label>
                             <input id="password_confirmation"
                                    type="password"
@@ -72,13 +72,14 @@
                             @endif
                         </div>
 
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex align-items-center justify-content-between mb-2">
 
-                            <a href="{{ route('login') }}" class="small text-muted text-decoration-none">
+                            <a href="{{ route('login') }}"
+                               class="small text-muted text-decoration-none">
                                 Already registered?
                             </a>
 
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="justify-content-end btn btn-dark">
                                 Register
                             </button>
                         </div>
