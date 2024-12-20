@@ -9,7 +9,7 @@
                         This is a secure area of the application. Please confirm your password before continuing.
                     </div>
 
-                    <form method="POST" action="{{ route('password.confirm') }}">
+                    <form method="POST" action="{{ route('password.confirm') }}" class="form-control">
                         @csrf
 
                         <div class="mb-3">
@@ -28,7 +28,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-3">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-dark">
                                 Confirm
                             </button>
                         </div>

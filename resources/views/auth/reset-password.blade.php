@@ -5,7 +5,7 @@
         <div class="row justify-content-center">
             <div class="col-lg-10 col-md-12">
                 <div class="card shadow-sm border-0 rounded">
-                    <form method="POST" action="{{ route('password.store') }}">
+                    <form method="POST" action="{{ route('password.store') }}" class="form-control">
                         @csrf
 
                         <input type="hidden" name="token" value="{{ $request->route('token') }}">
@@ -58,7 +58,7 @@
                         </div>
 
                         <div class="d-flex justify-content-end mt-4">
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-dark">
                                 Reset Password
                             </button>
                         </div>

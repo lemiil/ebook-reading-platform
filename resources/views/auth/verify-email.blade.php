@@ -3,8 +3,12 @@
 @section('content')
     <div class="container w-50">
         <div class="row justify-content-center">
+
             <div class="col-lg-10 col-md-12">
-                <div class="card shadow-sm border-0 rounded">
+
+
+                <div class="card shadow-sm border-0 rounded  form-control">
+
                     <div class="mb-4 text-sm text-muted">
                         Thanks for signing up! Before getting started, could you verify your email address by clicking
                         on the link
@@ -18,11 +22,12 @@
                         </div>
                     @endif
 
-                    <div class="mt-4 d-flex justify-content-between">
+                    <div class="mb-4 d-flex justify-content-between
+                    ">
 
                         <form method="POST" action="{{ route('verification.send') }}">
                             @csrf
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-dark">
                                 Resend Verification Email
                             </button>
                         </form>
