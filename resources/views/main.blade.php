@@ -7,7 +7,14 @@
 @section('content')
     <h1>Hello world</h1>
     <h1 style="font-size: 5em">AMERICA YA :D</h1>
-
+    @if(auth()->check())
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button type="submit" class="btn btn-link text-muted">
+                Log Out
+            </button>
+        </form>
+    @endif
 
     <div style="white-space:pre">
         ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣤⣤⣤⣤⣤⣤⣤⣤⣤⣀⣀⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀

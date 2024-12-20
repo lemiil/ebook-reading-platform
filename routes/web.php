@@ -6,7 +6,7 @@ use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookReadController;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'main')->name('home');
+Route::view('/', 'main')->name('main');
 
 Route::get(
     '/read/{book?}', [BookReaderController::class, 'index']
@@ -41,7 +41,7 @@ Route::get(
 )->name('book');
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect(route('main'));
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 
