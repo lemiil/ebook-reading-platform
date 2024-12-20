@@ -22,25 +22,26 @@
                         </div>
                     @endif
 
-                    <div class="mb-4 d-flex justify-content-between
+                    <div class=
+                             b-4 d-flex justify-content-between
                     ">
 
-                        <form method="POST" action="{{ route('verification.send') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-dark">
-                                Resend Verification Email
-                            </button>
-                        </form>
+                    <form method="POST" action="{{ route('verification.send') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-dark">
+                            Resend Verification Email
+                        </button>
+                    </form>
 
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <button type="submit" class="btn btn-link text-muted">
-                                Log Out
-                            </button>
-                        </form>
-                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="btn btn-link text-muted">
+                            Log Out
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
     </div>
+
 @endsection
