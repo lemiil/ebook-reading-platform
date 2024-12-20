@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Book;
 use App\Models\Book;
 
 use App\Services\Book\BookInfoExtractorService;
-use Kiwilan\Ebook\Ebook;
 
 use App\Http\Controllers\Controller;
 
