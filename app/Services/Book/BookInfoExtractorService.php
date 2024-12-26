@@ -12,6 +12,12 @@ class BookInfoExtractorService
     {
         $coverBASE64 = null;
 
+        if ($book->files->firstWhere('format', 'fb2') == null) {
+            $reader = false;
+        } else {
+            $reader = true;
+        }
+
         try {
             $path = base_path('storage/app/' . $book->files->firstWhere('format', 'epub')->file_path);
         } catch (\Exception $e) {
@@ -31,6 +37,8 @@ class BookInfoExtractorService
             'authors' => $book->authors()->pluck('name'),
             'genres' => $book->genres()->pluck('name') ?: null,
             'year' => $book->year ?? null,
+            'formats' => $book->files()->pluck('format'),
+            'reader' => $reader,
             'tags' => $book->tags()->pluck('name') ?: null,
             'coverBASE64' => $coverBASE64,
             'cover' => $book->cover_path ?? null,

@@ -66,8 +66,20 @@
                                     <p>{{ $description }}</p>
                                 </div>
                                 <div class="d-flex">
-                                    <button class="btn btn-primary me-1">Читать</button>
-                                    <button class="btn btn-secondary me-1">Скачать</button>
+
+                                    @if($reader)
+                                        <form action="{{ route('book.reader', ['bookId' => request('book')]) }}"
+                                              target="_blank">
+                                            <button class="btn btn-primary me-1">Читать</button>
+                                        </form>
+                                    @endif
+                                    @foreach($formats as $format)
+                                        <form
+                                            action="{{ route('book.download', ['bookId' =>  request('book'), 'format' => $format])}}">
+                                            <button class="btn btn-secondary me-1">{{$format}}</button>
+                                        </form>
+                                    @endforeach
+
                                 </div>
                             </div>
                         </div>

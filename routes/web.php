@@ -4,7 +4,7 @@ use App\Http\Controllers\Author\AuthorController;
 use App\Http\Controllers\Author\AuthorReadController;
 use App\Http\Controllers\Book\BookReaderController;
 use App\Http\Controllers\Book\BookUploadController;
-use App\Http\Controllers\Book\BookReadController;
+use App\Http\Controllers\Book\BookInfoReadController;
 use App\Http\Controllers\Book\FileController;
 use Illuminate\Support\Facades\Route;
 
@@ -25,7 +25,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Book page
-Route::get('/book/{book}', [BookReadController::class, 'pageShow'])->name('book.read');
+Route::get('/book/{book}', [BookInfoReadController::class, 'pageShow'])->name('book.read');
 
 // Book download
 Route::middleware(['auth', 'verified'])->group(function () {

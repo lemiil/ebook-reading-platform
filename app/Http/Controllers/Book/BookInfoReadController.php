@@ -9,7 +9,7 @@ use App\Services\Book\BookInfoExtractorService;
 use App\Http\Controllers\Controller;
 
 
-class BookReadController extends Controller
+class BookInfoReadController extends Controller
 {
     protected BookInfoExtractorService $bookInfoExtractorService;
 
