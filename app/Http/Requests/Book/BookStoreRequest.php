@@ -21,16 +21,25 @@ class BookStoreRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-            'book' => 'required|array|min:1',
-            'book.*' => [
+            'book' => 'required|array|min:1|max:3',
+            'book.fb2' => [
                 'nullable',
                 'file',
-                "extensions:fb2,epub,pdf",
-                'mimetypes:text/xml,application/epub-zip,application/zip,application/epub+zip,application/epub,epub,fb2,application/pdf',
-                'min:1',
-                "max:10000",
+                'mimes:xml,text/xml,application/zip,fb2',
+                'max:10000',
+            ],
+            'book.epub' => [
+                'nullable',
+                'file',
+                'mimes:application/epub+zip,application/epub,application/epub-zip,epub',
+                'max:10000',
+            ],
+            'book.pdf' => [
+                'nullable',
+                'file',
+                'mimes:application/pdf,pdf',
+                'max:10000',
             ],
             'title' => [
                 'nullable',
@@ -52,7 +61,7 @@ class BookStoreRequest extends FormRequest
                 'max:2048',
             ],
             'genres' => [
-                'nullable'
+                'nullable',
             ],
             'year' => [
                 'nullable',
@@ -64,8 +73,7 @@ class BookStoreRequest extends FormRequest
                 'nullable',
                 'file',
                 'mimes:png,jpg,jpeg,webp',
-                'min:1',
-                "max:10000",
+                'max:10000',
             ],
             'tags' => [
                 'nullable',
@@ -75,7 +83,8 @@ class BookStoreRequest extends FormRequest
                 'string',
                 'min:1',
                 'max:32',
-            ]
+            ],
         ];
     }
+
 }

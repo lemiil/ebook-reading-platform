@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Services\Book;
 
 use App\Http\Requests\Book\BookStoreRequest;
@@ -9,6 +8,7 @@ use App\Models\Book;
 use App\Models\Tag;
 use Exception;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class BookUploadService
 {
@@ -21,14 +21,14 @@ class BookUploadService
 
     public function uploadBook(BookStoreRequest $request)
     {
-
         $files = $request->file('book');
         if (empty($files)) {
             throw new Exception('Файлы для загрузки не найдены.');
         }
 
-        $filePath = $this->storeFile($files[0]);
+        $filePath = $this->storeFile($files[array_key_first($files)]);
         $bookData = $this->dataExtractor->extractData($filePath, $request);
+        $this->deleteFirstFile($filePath);
 
         $book = Book::create($bookData);
 
@@ -43,18 +43,15 @@ class BookUploadService
 
     private function storeAllFiles($book, $files)
     {
-        $files = array_shift($files);
-        foreach ($files as $index => $file) {
-            if ($index > 0 || $files[0]) {
-                $filePath = $this->storeFile($file);
-                $book->files()->create([
-                    'file_path' => $filePath,
-                    'format' => $file->getClientOriginalExtension(),
-                ]);
-            }
+        foreach ($files as $file) {
+            $filePath = $this->storeFile($file);
+            $book->files()->create([
+                'file_path' => $filePath,
+                'format' => $file->getClientOriginalExtension(),
+            ]);
+            $book->save();
         }
     }
-
 
     private function storeCover($book, $request)
     {
@@ -64,7 +61,6 @@ class BookUploadService
             $book->cover_path = $path;
             $book->save();
         }
-
     }
 
     private function storeFile(UploadedFile $file, $directory = 'books'): string
@@ -79,6 +75,15 @@ class BookUploadService
         $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
         $file->storePubliclyAs("public/$directory/$directoryName", $fileName);
         return "$directory/$directoryName/$fileName";
+    }
+
+    private function deleteFirstFile(string $filePath): void
+    {
+        if (Storage::exists($filePath)) {
+            Storage::delete($filePath);
+        } else {
+            throw new Exception("Файл $filePath не найден для удаления.");
+        }
     }
 
     private function attachGenres($book, $request)
@@ -109,6 +114,4 @@ class BookUploadService
             }
         }
     }
-
-
 }
