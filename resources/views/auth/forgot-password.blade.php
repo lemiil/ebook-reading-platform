@@ -27,7 +27,11 @@
                                    type="email"
                                    name="email"
                                    class="form-control"
-                                   value="{{ old('email') }}"
+                                   @if(auth()->check())
+                                       value="{{ old('email', auth()->user()->email) }}"
+                                   @else
+                                       value="{{ old('email') }}"
+                                   @endif
                                    required
                                    autofocus>
                             @if ($errors->has('email'))

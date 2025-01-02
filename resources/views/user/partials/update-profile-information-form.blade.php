@@ -18,14 +18,8 @@
     <form method="post" action="{{ route('user.settings.update') }}" class="mt-4">
         @csrf
         @method('patch')
-
-        <!-- Success Message -->
-        @if (session('status') === 'profile-updated')
-            <div class="alert alert-success" role="alert">
-                Profile updated successfully.
-            </div>
-        @endif
         
+
         <!-- Name Field -->
         <div class="mb-3">
             <label for="name" class="form-label">Name</label>

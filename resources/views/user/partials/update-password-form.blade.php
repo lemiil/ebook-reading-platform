@@ -13,13 +13,6 @@
         @csrf
         @method('put')
 
-        <!-- Success Message -->
-        @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-        @endif
-
         <!-- Current Password -->
         <div class="mb-3">
             <label for="current_password" class="form-label">Current Password</label>
