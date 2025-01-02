@@ -6,7 +6,7 @@
 
 @section('content')
 
-    @include('book.forms.book-form')
+    @include('book.partials.book-form')
 
 
     <style>
