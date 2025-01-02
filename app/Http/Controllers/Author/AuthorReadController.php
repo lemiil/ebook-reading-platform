@@ -15,7 +15,7 @@ class AuthorReadController extends Controller
         $this->author = $author;
     }
 
-    public function pageShow(Author $author)
+    public function index(Author $author)
     {
         return view('author.author-page', $this->authorResponse($author));
     }

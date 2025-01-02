@@ -6,6 +6,8 @@ use App\Http\Controllers\Book\BookReaderController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookInfoReadController;
 use App\Http\Controllers\Book\FileController;
+use App\Http\Controllers\User\ProfileController;
+use App\Http\Controllers\User\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 // Main
@@ -25,7 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Book page
-Route::get('/book/{book}', [BookInfoReadController::class, 'pageShow'])->name('book.read');
+Route::get('/book/{book}', [BookInfoReadController::class, 'index'])->name('book.read');
 
 // Book download
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -36,10 +38,25 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/read/{bookId}', [BookReaderController::class, 'index'])->name('book.reader');
 
 // User page
-//Route::get('/user/{user}', [UserReadController::class, 'pageShow'])->name('user.read');
+//Route::get('/user/{user}', [ProfileController::class, 'pageShow'])->name('user.read');
 
 // Author page
-Route::get('/author/{author}', [AuthorReadController::class, 'pageShow'])->name('author.read');
+Route::get('/author/{author}', [AuthorReadController::class, 'index'])->name('author.read');
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('user/settings', [SettingsController::class, 'settings'])->name('user.settings');
+
+    Route::middleware(['verified'])->group(function () {
+        Route::patch('user/settings', [SettingsController::class, 'update'])->name('user.settings.update');
+    });
+});
+
+
+// Profile page
+Route::get('user/{userId}', [ProfileController::class, 'index'])->name('user.profile');
+
+// Settings page
+
 
 // Auth
 require __DIR__ . '/auth.php';

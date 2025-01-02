@@ -7,12 +7,11 @@ use App\Http\Requests\Author\AuthorStoreRequest;
 use App\Models\Author;
 use Illuminate\Http\Request;
 
-class UserReadController extends Controller
+class ProfileController extends Controller
 {
     public function index()
     {
-        return view('user/profile');
+        return view('user/user');
     }
-
 
 }

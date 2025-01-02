@@ -21,7 +21,7 @@ class BookInfoReadController extends Controller
         $this->bookInfoExtractorService = $bookInfoExtractorService;
     }
 
-    public function pageShow(Book $book)
+    public function index(Book $book)
     {
         return view('book.book-page', $this->bookResponse($book));
     }
