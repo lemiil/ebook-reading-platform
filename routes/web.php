@@ -43,6 +43,7 @@ Route::get('/read/{bookId}', [BookReaderController::class, 'index'])->name('book
 // Author page
 Route::get('/author/{author}', [AuthorReadController::class, 'index'])->name('author.read');
 
+// Settings page
 Route::middleware(['auth'])->group(function () {
     Route::get('user/settings', [SettingsController::class, 'settings'])->name('user.settings');
 
@@ -54,8 +55,6 @@ Route::middleware(['auth'])->group(function () {
 
 // Profile page
 Route::get('user/{userId}', [ProfileController::class, 'index'])->name('user.profile');
-
-// Settings page
 
 
 // Auth
