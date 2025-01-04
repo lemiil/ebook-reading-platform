@@ -36,4 +36,10 @@ class Book extends Model
         return $this->hasMany(BookFile::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+
 }
