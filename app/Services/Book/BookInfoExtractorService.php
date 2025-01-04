@@ -43,6 +43,7 @@ class BookInfoExtractorService
             'coverBASE64' => $coverBASE64,
             'cover' => $book->cover_path ?? null,
             'description' => $book->description ?? null,
+            'reviews' => $book->reviews() ?: null,
         ];
     }
 

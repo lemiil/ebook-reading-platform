@@ -6,6 +6,8 @@ use App\Http\Controllers\Book\BookReaderController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookInfoReadController;
 use App\Http\Controllers\Book\FileController;
+use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\Review\ReviewController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -56,6 +58,15 @@ Route::middleware(['auth'])->group(function () {
 // Profile page
 Route::get('user/{userId}', [ProfileController::class, 'index'])->name('user.profile');
 
+// Review
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('review', [ReviewController::class, 'store'])->name('review.upload');
+});
+
+// Comment
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('comment/{reviewId}/{userId}', [CommentController::class, 'store'])->name('comment.upload');
+});
 
 // Auth
 require __DIR__ . '/auth.php';
