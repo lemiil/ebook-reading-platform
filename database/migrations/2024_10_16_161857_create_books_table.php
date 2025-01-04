@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('title');
             $table->text('description')->nullable();
             $table->string('cover_path')->nullable();
+            $table->float('rating')->default(0);
             $table->timestamps();
         });
     }
