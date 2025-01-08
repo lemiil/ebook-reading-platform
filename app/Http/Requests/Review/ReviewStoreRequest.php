@@ -24,7 +24,7 @@ class ReviewStoreRequest extends FormRequest
     {
         return [
             'rating' => 'required|integer|between:1,10',
-            'content' => 'string|between:2,16384',
+            'content' => 'string|max:16384',
             'book_id' => 'required|exists:books,id',
         ];
     }

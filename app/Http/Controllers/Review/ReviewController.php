@@ -17,9 +17,8 @@ class ReviewController extends Controller
         $validatedData = $request->validated();
         $validatedData['user_id'] = $userId;
         Review::create($validatedData);
-
-        $this->recalculateBookRating($request->query('bookId'));
-        return back()->with('message', 'Review completed successfully!');
+        $this->recalculateBookRating($validatedData['book_id']);
+        return redirect()->route('book.read', $validatedData['book_id']);
     }
 
     private function recalculateBookRating($bookId)

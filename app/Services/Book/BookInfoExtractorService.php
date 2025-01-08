@@ -32,6 +32,7 @@ class BookInfoExtractorService
             }
         }
 
+
         return [
             'title' => $book->title,
             'authors' => $book->authors()->pluck('name'),
@@ -43,7 +44,7 @@ class BookInfoExtractorService
             'coverBASE64' => $coverBASE64,
             'cover' => $book->cover_path ?? null,
             'description' => $book->description ?? null,
-            'reviews' => $book->reviews() ?: null,
+            'reviews' => $book->reviews()->get()->take(5) ?: null,
         ];
     }
 
