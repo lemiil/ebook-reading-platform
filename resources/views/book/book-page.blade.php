@@ -75,6 +75,32 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card shadow-sm border-0 rounded mt-4">
+                        <div class="p-4">
+                            <h3 class="fw-bold text-dark">Оставить отзыв</h3>
+                            <form action="{{ route('review.upload') }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="book_id" value="{{ request('book')->id }}">
+
+                                <div class="d-flex flex-column gap-3">
+                                    <div class="rate d-flex justify-content-center mb-3">
+                                        @for ($i = 10; $i >= 1; $i--)
+                                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
+                                                   required/>
+                                            <label for="star{{ $i }}" title="{{ $i }} stars">{{ $i }} stars</label>
+                                        @endfor
+                                    </div>
+
+                                    <div class="editor-container">
+                                        <textarea id="editor" name="content" rows="5" placeholder="Написать отзыв..."
+                                        ></textarea>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary mt-3">Отправить</button>
+                            </form>
+                        </div>
+                    </div>
 
                     <div class="card shadow-sm border-0 rounded mt-4">
                         <div class="p-4">
@@ -84,137 +110,133 @@
                                     <p class="text-muted">Отзывов пока нет.</p>
                                 @else
                                     @foreach($reviews as $review)
-                                        <div class="mb-4">
+                                        <div class="mb-4 row border-bottom review" data-review-id="{{ $review->id }}">
                                             <div class="d-flex align-items-center mb-2">
                                                 <strong>{{ $review->user->name }}</strong>
                                                 <span
                                                     class="ms-auto text-muted">{{ $review->created_at->format('d.m.Y') }}</span>
                                             </div>
                                             <p><strong>Оценка:</strong> {{ $review->rating }}/10</p>
-                                            <p>{{ $review->content }}</p>
-
-                                            <div class="comments-section ms-3">
-                                                @foreach($review->comments as $comment)
-                                                    <div class="mb-3">
-                                                        <strong>{{ $comment->user->name }}</strong>
-                                                        <span class="text-muted">({{ $comment->created_at->format('d.m.Y') }})</span>
-                                                        <p>{{ $comment->content }}</p>
-                                                    </div>
-                                                @endforeach
-
-
-                                                <form
-                                                    action="{{ route('comment.upload', ['reviewId' => $review->id, 'userId' => Auth::id()]) }}"
-                                                    method="POST" class="mt-2">
-                                                    @csrf
-                                                    <textarea class="form-control" rows="2"
-                                                              name="content"
-                                                              placeholder="Написать комментарий..."></textarea>
-                                                    <button type="submit" class="btn btn-secondary btn-sm mt-2">
-                                                        Отправить
-                                                    </button>
-                                                </form>
+                                            <div
+                                                style="white-space: pre-wrap; word-wrap: break-word;">{!! $review->content  ?? 'No content provided.' !!}</div>
+                                            <div class="d-flex align-items-start mb-3">
+                                                <div>
+                                                    <span class="heart"><i class="fa fa-heart-o" aria-hidden="true"></i></span>
+                                                </div>
+                                                <div class="ms-2 likes-count">
+                                                    {{ $review->likes ?? 0 }} Likes
+                                                </div>
+                                                <div class="ms-auto">
+                                                    <a href="" class="text-muted">Open review</a>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
+
                                 @endif
                             </div>
                         </div>
                     </div>
 
-                    <div class="card shadow-sm border-0 rounded mt-4">
-                        <div class="p-4">
-                            <h3 class="fw-bold text-dark">Оставить отзыв</h3>
-                            <form
-                                action="{{ route('review.upload', ['bookId' => request('book')])}}"
-                                method="POST">
+                    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
+                    <script>
+                        ClassicEditor
+                            .create(document.querySelector('#editor'), {
+                                toolbar: ['bold', 'italic', '|', 'link', 'bulletedList', 'numberedList']
+                            })
+                            .catch(error => {
+                                console.error(error);
+                            });
+                    </script>
 
-                                @csrf
-                                <input type="hidden" name="book_id" value="{{ request('book') }}">
-                                <div class="rate mb-3">
-                                    <input type="radio" id="star10" name="rating" value="10"/>
-                                    <label for="star10" title="text">10 stars</label>
-                                    <input type="radio" id="star9" name="rating" value="9"/>
-                                    <label for="star9" title="text">9 stars</label>
-                                    <input type="radio" id="star8" name="rating" value="8"/>
-                                    <label for="star8" title="text">8 stars</label>
-                                    <input type="radio" id="star7" name="rating" value="7"/>
-                                    <label for="star7" title="text">7 stars</label>
-                                    <input type="radio" id="star6" name="rating" value="6"/>
-                                    <label for="star6" title="text">6 star</label>
-                                    <input type="radio" id="star5" name="rating" value="5"/>
-                                    <label for="star5" title="text">5 stars</label>
-                                    <input type="radio" id="star4" name="rating" value="4"/>
-                                    <label for="star4" title="text">4 stars</label>
-                                    <input type="radio" id="star3" name="rating" value="3"/>
-                                    <label for="star3" title="text">3 stars</label>
-                                    <input type="radio" id="star2" name="rating" value="2"/>
-                                    <label for="star2" title="text">2 stars</label>
-                                    <input type="radio" id="star1" name="rating" value="1"/>
-                                    <label for="star1" title="text">1 star</label>
-                                </div>
-                                <div class="mb-3">
-                                    <textarea class="form-control" name="content" rows="3"
-                                              placeholder="Написать отзыв..." required></textarea>
-                                </div>
-                                <button type="submit" class="btn btn-primary">Отправить</button>
-                            </form>
-                        </div>
-                    </div>
 
+                    <script>
+                        $(document).ready(function () {
+                            $(".review").on("click", ".heart", function () {
+                                const heart = $(this);
+                                const review = heart.closest(".review");
+                                const likesCountElement = review.find(".likes-count");
+                                const reviewId = review.data("review-id");
+
+                                let currentLikes = parseInt(likesCountElement.text()) || 0;
+
+                                if (heart.hasClass("liked")) {
+                                    heart.html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
+                                    heart.removeClass("liked");
+                                    likesCountElement.text(`${currentLikes - 1} Likes`);
+                                } else {
+                                    heart.html('<i class="fa fa-heart" aria-hidden="true"></i>');
+                                    heart.addClass("liked");
+                                    likesCountElement.text(`${currentLikes + 1} Likes`);
+                                }
+
+                                // Uncomment and implement the server-side handler for likes if needed
+                                // $.post('/reviews/' + reviewId + '/like', { liked: heart.hasClass('liked') });
+                            });
+                        });
+
+                    </script>
+
+
+                    <style>
+
+                        .fa-heart-o {
+                            color: red;
+                            cursor: pointer;
+                        }
+
+                        .fa-heart {
+                            color: red;
+                            cursor: pointer;
+                        }
+
+                        .card img {
+                            max-height: 300px;
+                            object-fit: cover;
+                        }
+
+                        .rate {
+                            gap: 0.5rem;
+                            transform: scaleX(-1);
+                        }
+
+
+                        .rate:not(:checked) > input {
+                            position: absolute;
+                            top: -9999px;
+                        }
+
+                        .rate:not(:checked) > label {
+                            float: right;
+                            width: 1em;
+                            overflow: hidden;
+                            white-space: nowrap;
+                            cursor: pointer;
+                            font-size: 30px;
+                            color: #ccc;
+                        }
+
+                        .rate:not(:checked) > label:before {
+                            content: '★ ';
+                        }
+
+                        .rate > input:checked ~ label {
+                            color: #ffc700;
+                        }
+
+                        .rate:not(:checked) > label:hover,
+                        .rate:not(:checked) > label:hover ~ label {
+                            color: #deb217;
+                        }
+
+                        .rate > input:checked + label:hover,
+                        .rate > input:checked + label:hover ~ label,
+                        .rate > input:checked ~ label:hover,
+                        .rate > input:checked ~ label:hover ~ label,
+                        .rate > label:hover ~ input:checked ~ label {
+                            color: #c59b08;
+                        }
+                    </style>
                 </div>
-            </div>
-        </div>
-
-        <!-- Custom CSS for better styling -->
-        <style>
-            .card img {
-                max-height: 300px;
-                object-fit: cover;
-            }
-
-            .rate {
-                float: left;
-                height: 46px;
-                padding: 0 10px;
-            }
-
-            .rate:not(:checked) > input {
-                position: absolute;
-                top: -9999px;
-            }
-
-            .rate:not(:checked) > label {
-                float: right;
-                width: 1em;
-                overflow: hidden;
-                white-space: nowrap;
-                cursor: pointer;
-                font-size: 30px;
-                color: #ccc;
-            }
-
-            .rate:not(:checked) > label:before {
-                content: '★ ';
-            }
-
-            .rate > input:checked ~ label {
-                color: #ffc700;
-            }
-
-            .rate:not(:checked) > label:hover,
-            .rate:not(:checked) > label:hover ~ label {
-                color: #deb217;
-            }
-
-            .rate > input:checked + label:hover,
-            .rate > input:checked + label:hover ~ label,
-            .rate > input:checked ~ label:hover,
-            .rate > input:checked ~ label:hover ~ label,
-            .rate > label:hover ~ input:checked ~ label {
-                color: #c59b08;
-            }
-        </style>
-    </div>
 
 @endsection

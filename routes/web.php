@@ -60,7 +60,7 @@ Route::get('user/{userId}', [ProfileController::class, 'index'])->name('user.pro
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('review', [ReviewController::class, 'store'])->name('review.upload');
+    Route::post('review/upload', [ReviewController::class, 'store'])->name('review.upload');
 });
 
 // Comment
