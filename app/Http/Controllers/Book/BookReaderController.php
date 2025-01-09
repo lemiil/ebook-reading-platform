@@ -15,7 +15,7 @@ class BookReaderController extends Controller
         $this->bookReaderService = $BookReaderService;
     }
 
-    public function index($bookId)
+    public function show($bookId)
     {
         try {
             $chapters = $this->bookContentResponse($bookId);

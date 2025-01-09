@@ -2,34 +2,25 @@
 
 namespace App\Http\Controllers\Book;
 
-use App\Models\Book;
-
-use App\Services\Book\BookInfoExtractorService;
-
 use App\Http\Controllers\Controller;
-
+use App\Models\Book;
+use App\Http\Resources\BookResource;
 
 class BookInfoReadController extends Controller
 {
-    protected BookInfoExtractorService $bookInfoExtractorService;
-
-    protected Book $book;
-
-    public function __construct(Book $book, BookInfoExtractorService $bookInfoExtractorService)
+    public function show(Book $book)
     {
-        $this->book = $book;
-        $this->bookInfoExtractorService = $bookInfoExtractorService;
+        $bookData = (new BookResource($book))->toArray(request());
+
+        return view('book.book-show', compact('bookData'));
     }
 
-    public function index(Book $book)
+    public function index()
     {
-        return view('book.book-page', $this->bookResponse($book));
+//        todo реализовать
+//        $booksData = BookResource::collection(Book::with(['authors', 'genres', 'tags', 'files', 'reviews'])->get())
+//            ->toArray(request());
+//
+//        return view('book.book-list', compact('booksData'));
     }
-
-    protected function bookResponse(Book $book): array
-    {
-        return $this->bookInfoExtractorService->extractBookInfo($book);
-    }
-
-
 }

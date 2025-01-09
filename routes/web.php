@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Author\AuthorController;
-use App\Http\Controllers\Author\AuthorReadController;
 use App\Http\Controllers\Book\BookReaderController;
 use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookInfoReadController;
@@ -15,10 +14,6 @@ use Illuminate\Support\Facades\Route;
 // Main
 Route::view('/', 'main')->name('main');
 
-
-// Author upload view
-Route::get('/author/upload', [AuthorController::class, 'index'])->name('author.upload.view');
-
 // Book upload view
 Route::get('/book/upload', [BookUploadController::class, 'index'])->name('book.upload.view');
 
@@ -28,22 +23,30 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/book/upload', [BookUploadController::class, 'store'])->name('book.upload');
 });
 
-// Book page
-Route::get('/book/{book}', [BookInfoReadController::class, 'index'])->name('book.read');
-
-// Book download
+//// Book
+Route::prefix('books')->group(function () {
+    Route::get('/', [BookInfoReadController::class, 'index'])->name('book.list');
+    Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
+});
+// Book Download
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('book/download/{format}/{bookId}', [FileController::class, 'download'])->name('book.download');
 });
 
 // Reader
-Route::get('/read/{bookId}', [BookReaderController::class, 'index'])->name('book.reader');
+Route::get('/read/{bookId}', [BookReaderController::class, 'show'])->name('book.reader');
 
 // User page
 //Route::get('/user/{user}', [ProfileController::class, 'pageShow'])->name('user.read');
 
-// Author page
-Route::get('/author/{author}', [AuthorReadController::class, 'index'])->name('author.read');
+//// Author
+
+Route::prefix('authors')->group(function () {
+    Route::get('/', [AuthorController::class, 'index'])->name('author.list');
+    Route::get('/{author}', [AuthorController::class, 'show'])->name('author.show');
+});
+Route::view('/author/upload', 'author.author-show')->name('author.upload.view');
+
 
 // Settings page
 Route::middleware(['auth'])->group(function () {
@@ -62,6 +65,8 @@ Route::get('user/{userId}', [ProfileController::class, 'index'])->name('user.pro
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('review/upload', [ReviewController::class, 'store'])->name('review.upload');
 });
+
+Route::get('review/{reviewId}', [ReviewController::class, 'index'])->name('review.index');
 
 // Comment
 Route::middleware(['auth', 'verified'])->group(function () {

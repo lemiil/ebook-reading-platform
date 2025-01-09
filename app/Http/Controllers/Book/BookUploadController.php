@@ -10,24 +10,18 @@ use Exception;
 
 class BookUploadController extends Controller
 {
-    protected $bookUploadService;
-
-    public function __construct(BookUploadService $bookUploadService)
-    {
-        $this->bookUploadService = $bookUploadService;
-    }
 
     public function index()
     {
-        $genres = Genre::all();
+        $genres = Genre::orderBy('name')->get();
         return view("book/book-upload", compact('genres'));
     }
 
-    public function store(BookStoreRequest $request)
+    public function store(BookStoreRequest $request, BookUploadService $bookUploadService)
     {
         try {
             if ($request->hasFile('book')) {
-                $this->bookUploadService->uploadBook($request);
+                $bookUploadService->uploadBook($request);
             }
             return redirect()->route('book.upload.view')->with('bookisuploaded', 'Книга успешно загружена. Вы молодец.');
         } catch (Exception $e) {
