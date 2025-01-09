@@ -14,10 +14,10 @@
                     <div class="card shadow-sm border-0 rounded">
                         <div class="row g-0">
                             <div class="col-md-8 p-4">
-                                <h4 class="fw-bold">{{ $author_name }}</h4>
+                                <h4 class="fw-bold">{{ $authorData['name'] }}</h4>
 
                                 <div class="description text-muted mb-4">
-                                    <p>{{ $author_description }}</p>
+                                    <p>{{ $authorData['description'] }}</p>
                                 </div>
                             </div>
                         </div>

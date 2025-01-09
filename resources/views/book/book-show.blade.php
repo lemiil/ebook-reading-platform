@@ -15,13 +15,13 @@
                     <div class="card shadow-sm border-0 rounded">
                         <div class="row g-0">
                             <div class="col-md-4 d-flex justify-content-center align-items-center">
-                                @if(isset($coverBASE64))
+                                @if(isset($bookData['coverBASE64']))
                                     <img class="img-fluid rounded" height="300px" width="200px"
                                          src="data:image/png;base64,{{ $coverBASE64 }}"
                                          alt="Book Cover">
-                                @elseif(isset($cover))
+                                @elseif(isset($bookData['cover']))
                                     <img class="img-fluid rounded" height="300px" width="200px"
-                                         src="{{ asset('storage/' . $cover) }}"
+                                         src="{{ asset('storage/' . $bookData['cover']) }}"
                                          alt="Book Cover">
                                 @else
                                     <img class="img-fluid rounded" height="300px" width="200px"
@@ -30,42 +30,47 @@
                                 @endif
                             </div>
                             <div class="col-md-8 p-4">
-                                <h4 class="fw-bold">{{ $title }}</h4>
-                                @foreach($authors as $author)
+                                <h4 class="fw-bold">{{ $bookData['title'] }}</h4>
+                                @foreach($bookData['authors'] as $author)
                                     <h5 class="text-muted">{{ $author }}</h5>
                                 @endforeach
 
-                                @if(isset($genres))
+                                @if(isset($bookData['genres']))
                                     <p class="text-muted">
-                                        @foreach($genres as $genre)
+                                        @foreach($bookData['genres'] as $genre)
                                             <span class="badge bg-light text-dark me-1">{{ $genre }}</span>
                                         @endforeach
                                     </p>
                                 @endif
 
-                                @if(isset($year))
-                                    <p class="text-muted"><strong>Год издания:</strong> {{ $year }}</p>
+                                @if(isset($bookData['year']))
+                                    <p class="text-muted"><strong>Год издания:</strong> {{ $bookData['year'] }}</p>
                                 @endif
 
-                                @if(isset($rating))
-                                    <p class="text-muted"><strong>Рейтинг:</strong> {{ number_format($rating, 1) }}/10
-                                    </p>
+                                @if(isset($bookData['rating']))
+                                    @if($bookData['rating'] == 0)
+                                    @else
+                                        <p class="text-muted">
+                                            <strong>Рейтинг:</strong> {{ number_format($bookData['rating'], 1) }}/10
+                                            рейтинг нужно будет переставить
+                                        </p>
+                                    @endif
                                 @endif
 
                                 <strong>
                                     <div class="text-muted">Аннотация:</div>
                                 </strong>
                                 <div class="description text-muted mb-4">
-                                    <p>{{ $description }}</p>
+                                    <p>{{ $bookData['description'] }}</p>
                                 </div>
                                 <div class="d-flex">
-                                    @if($reader)
+                                    @if($bookData['reader'])
                                         <form action="{{ route('book.reader', ['bookId' => request('book')]) }}"
                                               target="_blank">
                                             <button class="btn btn-primary me-1">Читать</button>
                                         </form>
                                     @endif
-                                    @foreach($formats as $format)
+                                    @foreach($bookData['formats'] as $format)
                                         <form
                                             action="{{ route('book.download', ['bookId' => request('book'), 'format' => $format]) }}">
                                             <button class="btn btn-secondary me-1">{{ $format }}</button>
@@ -106,25 +111,25 @@
                         <div class="p-4">
                             <h3 class="fw-bold text-dark">Отзывы</h3>
                             <div class="reviews-list mt-3">
-                                @if($reviews->count() == 0)
+                                @if($bookData['reviews']->count() == 0)
                                     <p class="text-muted">Отзывов пока нет.</p>
                                 @else
-                                    @foreach($reviews as $review)
-                                        <div class="mb-4 row border-bottom review" data-review-id="{{ $review->id }}">
+                                    @foreach($bookData['reviews'] as $review)
+                                        <div class="mb-4 row border-bottom review" data-review-id="{{ $review['id'] }}">
                                             <div class="d-flex align-items-center mb-2">
-                                                <strong>{{ $review->user->name }}</strong>
+                                                <strong>{{ $review['name'] }}</strong>
                                                 <span
-                                                    class="ms-auto text-muted">{{ $review->created_at->format('d.m.Y') }}</span>
+                                                    class="ms-auto text-muted">{{ $review["created_at"] }}</span>
                                             </div>
-                                            <p><strong>Оценка:</strong> {{ $review->rating }}/10</p>
+                                            <p><strong>Оценка:</strong> {{ $review['rating'] }}/10</p>
                                             <div
-                                                style="white-space: pre-wrap; word-wrap: break-word;">{!! $review->content  ?? 'No content provided.' !!}</div>
+                                                style="white-space: pre-wrap; word-wrap: break-word;">{!! $review['content']  ?? 'No content provided.' !!}</div>
                                             <div class="d-flex align-items-start mb-3">
                                                 <div>
                                                     <span class="heart"><i class="fa fa-heart-o" aria-hidden="true"></i></span>
                                                 </div>
                                                 <div class="ms-2 likes-count">
-                                                    {{ $review->likes ?? 0 }} Likes
+                                                    {{ $review['likes'] ?? 0 }} Likes
                                                 </div>
                                                 <div class="ms-auto">
                                                     <a href="" class="text-muted">Open review</a>
