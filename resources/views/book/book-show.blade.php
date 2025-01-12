@@ -82,28 +82,55 @@
                     </div>
                     <div class="card shadow-sm border-0 rounded mt-4">
                         <div class="p-4">
-                            <h3 class="fw-bold text-dark">Оставить отзыв</h3>
-                            <form action="{{ route('review.upload') }}" method="POST">
-                                @csrf
-                                <input type="hidden" name="book_id" value="{{ request('book')->id }}">
+                            @if($userReview)
+                                <h3 class="fw-bold text-dark">Редактировать отзыв</h3>
+                                <form action="{{ route('review.upload') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ request('book')->id }}">
 
-                                <div class="d-flex flex-column gap-3">
-                                    <div class="rate d-flex justify-content-center mb-3">
-                                        @for ($i = 10; $i >= 1; $i--)
-                                            <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
-                                                   required/>
-                                            <label for="star{{ $i }}" title="{{ $i }} stars">{{ $i }} stars</label>
-                                        @endfor
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="rate d-flex justify-content-center mb-3"
+                                             value="{{$userReview['rating']}}">
+                                            @for ($i = 10; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
+                                                       required/>
+                                                <label for="star{{ $i }}" title="{{ $i }} stars">{{ $i }} stars</label>
+                                            @endfor
+                                        </div>
+
+                                        <div class="editor-container">
+                                        <textarea id="editor" name="content" rows="5"
+                                                  placeholder="Редактировать отзыв..."
+                                        >{{$userReview['content']}}</textarea>
+                                        </div>
                                     </div>
 
-                                    <div class="editor-container">
+                                    <button type="submit" class="btn btn-primary mt-3">Отправить</button>
+                                </form>
+                            @else
+                                <h3 class="fw-bold text-dark">Оставить отзыв</h3>
+                                <form action="{{ route('review.upload') }}" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="book_id" value="{{ request('book')->id }}">
+
+                                    <div class="d-flex flex-column gap-3">
+                                        <div class="rate d-flex justify-content-center mb-3">
+                                            @for ($i = 10; $i >= 1; $i--)
+                                                <input type="radio" id="star{{ $i }}" name="rating" value="{{ $i }}"
+                                                       required/>
+                                                <label for="star{{ $i }}" title="{{ $i }} stars">{{ $i }} stars</label>
+                                            @endfor
+                                        </div>
+
+                                        <div class="editor-container">
                                         <textarea id="editor" name="content" rows="5" placeholder="Написать отзыв..."
                                         ></textarea>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <button type="submit" class="btn btn-primary mt-3">Отправить</button>
-                            </form>
+                                    <button type="submit" class="btn btn-primary mt-3">Отправить</button>
+                                </form>
+                            @endif
                         </div>
                     </div>
 
@@ -129,7 +156,7 @@
                                                     <span class="heart"><i class="fa fa-heart-o" aria-hidden="true"></i></span>
                                                 </div>
                                                 <div class="ms-2 likes-count">
-                                                    {{ $review['likes'] ?? 0 }} Likes
+                                                    {{ $review['likes'] }} Likes
                                                 </div>
                                                 <div class="ms-auto">
                                                     <a href="" class="text-muted">Open review</a>
@@ -149,9 +176,15 @@
                             .create(document.querySelector('#editor'), {
                                 toolbar: ['bold', 'italic', '|', 'link', 'bulletedList', 'numberedList']
                             })
+                            .then(editor => {
+                                @if (!empty($userReview) && isset($userReview['content']))
+                                editor.setData(`{!! $userReview['content'] !!}`);
+                                @endif
+                            })
                             .catch(error => {
                                 console.error(error);
                             });
+
                     </script>
 
 
@@ -175,8 +208,7 @@
                                     likesCountElement.text(`${currentLikes + 1} Likes`);
                                 }
 
-                                // Uncomment and implement the server-side handler for likes if needed
-                                // $.post('/reviews/' + reviewId + '/like', { liked: heart.hasClass('liked') });
+                                $.post('/reviews/' + reviewId + '/like', {liked: heart.hasClass('liked')});
                             });
                         });
 

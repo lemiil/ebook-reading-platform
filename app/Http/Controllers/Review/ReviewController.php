@@ -14,7 +14,7 @@ class ReviewController extends Controller
 
     public function index()
     {
-        //todo реализовать с лейзи лоадингом и паддингои
+        //todo реализовать с лейзи лоадингом и пагинацией
 //        $reviews = Review::all();
 //        return view('review.review-list', compact('reviews'));
     }

@@ -55,7 +55,7 @@ class BookResource extends JsonResource
                         'rating' => $review->rating,
                         'created_at' => $review->created_at->format('d.m.Y'),
                         'name' => $review->user->name,
-                        'likes' => $review->likes ? $review->likes->count() : 0,
+                        'likes' => $review->likers()->count(),
                     ];
                 }),
         ];
