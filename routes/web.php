@@ -64,7 +64,8 @@ Route::get('users/{userId}', [ProfileController::class, 'show'])->name('user.pro
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('review/upload', [ReviewController::class, 'store'])->name('review.upload');
+    Route::post('reviews/upload', [ReviewController::class, 'store'])->name('review.upload');
+    Route::patch('reviews/update', [ReviewController::class, 'update'])->name('review.update');
 });
 
 Route::get('reviews/{reviewId}', [ReviewController::class, 'show'])->name('review.show');

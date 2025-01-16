@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Review;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Review\ReviewStoreRequest;
+use App\Http\Requests\Review\ReviewUpdateRequest;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
@@ -42,23 +43,24 @@ class ReviewController extends Controller
         return redirect()->route('book.show', $validatedData['book_id']);
     }
 
+    public function update(ReviewUpdateRequest $request)
+    {
+        $user = Auth::user();
 
-// todo и это тоже сделать
-//    public function update(Request $request, Review $review)
-//    {
-//        $user = Auth::user();
-//
-//        if ($review->user_id !== $user->id) {
-//            return redirect()->route('reviews.index')->with('error', 'You are not authorized to update this review.');
-//        }
-//
-//        $review->update([
-//            'rating' => $validated['rating'],
-//            'content' => $validated['content'] ?? null,
-//        ]);
-//
-//        return redirect()->route('reviews.show', $review)->with('success', 'Review updated successfully.');
-//    }
+        $review = Review::findOrFail($_GET['review_id']);
+
+        if ($review->user_id !== $user->id) {
+            return redirect()->route('reviews.index')->with('error', 'You are not authorized to update this review.');
+        }
+
+        $review->update([
+            'rating' => $request->rating,
+            'content' => $request->toArray()['content'] ?? null,
+        ]);
+
+        return redirect()->route('main', $review)->with('success', 'Review updated successfully.');
+    }
+
 
     private function recalculateBookRating($bookId)
     {
