@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Review;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Review\ReviewStoreRequest;
 use App\Http\Requests\Review\ReviewUpdateRequest;
+use App\Http\Resources\ReviewResource;
 use App\Models\Book;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
@@ -13,17 +14,37 @@ use Illuminate\Validation\ValidationException;
 class ReviewController extends Controller
 {
 
-    public function index()
+    public function index(Book $book)
     {
-        //todo реализовать с лейзи лоадингом и пагинацией
-//        $reviews = Review::all();
-//        return view('review.review-list', compact('reviews'));
+        $reviews = $book->reviews()
+            ->where('content', '!=', '')
+            ->latest()
+            ->paginate(1);
+        if (request()->ajax()) {
+            $reviews->getCollection()->transform(function ($review) {
+                return [
+                    'id' => $review->id,
+                    'content' => $review->content,
+                    'rating' => $review->rating,
+                    'created_at' => $review->created_at->format('d.m.Y'),
+                    'updated_at' => $review->updated_at->format('d.m.Y'),
+                    'name' => $review->user->name ?? null,
+                    'likes' => $review->likers()->count(),
+                ];
+            });
+
+            return response()->json($reviews);
+        }
+
+        return view('review.review-index', compact('reviews'));
     }
+
 
     public function show(Review $review)
     {
-        //todo тоже самое
-//        return view('review.review-show', compact('review'));
+        $review = (new ReviewResource($review))->resolve();
+
+        return view('review.review-show', compact('review'));
     }
 
     public function store(ReviewStoreRequest $request, Book $book)
