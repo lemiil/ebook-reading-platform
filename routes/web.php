@@ -16,7 +16,6 @@ Route::view('/', 'main')->name('main');
 
 // Book upload view
 
-
 // Book
 Route::prefix('books')->group(function () {
     Route::get('/upload', [BookUploadController::class, 'index'])->name('book.upload.view');
@@ -24,6 +23,7 @@ Route::prefix('books')->group(function () {
         Route::post('/upload', [BookUploadController::class, 'store'])->name('book.upload');
     });
 
+    Route::get('/{book}/reviews', [ReviewController::class, 'index'])->name('book.reviews.index');
     Route::get('/', [BookInfoReadController::class, 'index'])->name('book.list');
     Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
     Route::middleware(['auth', 'verified'])->group(function () {
@@ -67,8 +67,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('reviews/upload', [ReviewController::class, 'store'])->name('review.upload');
     Route::patch('reviews/update', [ReviewController::class, 'update'])->name('review.update');
 });
-
-Route::get('reviews/{reviewId}', [ReviewController::class, 'show'])->name('review.show');
+Route::get('reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
 
 // Comment todo переработать эту хероту
 //Route::middleware(['auth', 'verified'])->group(function () {
