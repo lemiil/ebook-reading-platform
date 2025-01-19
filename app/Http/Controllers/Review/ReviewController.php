@@ -19,7 +19,7 @@ class ReviewController extends Controller
         $reviews = $book->reviews()
             ->where('content', '!=', '')
             ->latest()
-            ->paginate(1);
+            ->paginate(5);
         if (request()->ajax()) {
             $reviews->getCollection()->transform(function ($review) {
                 return [
