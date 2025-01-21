@@ -42,10 +42,12 @@ class ReviewController extends Controller
 
     public function show(Review $review)
     {
+        $review->load(['comments.childrens.user']);
         $review = (new ReviewResource($review))->resolve();
 
         return view('review.review-show', compact('review'));
     }
+
 
     public function store(ReviewStoreRequest $request, Book $book)
     {

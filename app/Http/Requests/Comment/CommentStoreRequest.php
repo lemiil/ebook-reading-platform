@@ -23,7 +23,9 @@ class CommentStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'content' => 'required|string|between:2,16384',
+            'review_id' => 'required|integer|exists:reviews,id',
+            'parent_comment_id' => 'nullable|integer|exists:comments,id',
+            'content' => 'required|string|between:1,8000',
         ];
     }
 }

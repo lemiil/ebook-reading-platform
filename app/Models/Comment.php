@@ -13,12 +13,12 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function parent_comment()
+    public function parent()
     {
         $this->belongsTo(Comment::class, 'parent_comment_id');
     }
 
-    public function replies()
+    public function childrens()
     {
         return $this->hasMany(Comment::class, 'parent_comment_id');
     }

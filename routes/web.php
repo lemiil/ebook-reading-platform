@@ -64,15 +64,17 @@ Route::get('users/{userId}', [ProfileController::class, 'show'])->name('user.pro
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('reviews/{review}/comments/upload', [CommentController::class, 'store'])->name('comment.upload');
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('reviews/upload', [ReviewController::class, 'store'])->name('review.upload');
     Route::patch('reviews/update', [ReviewController::class, 'update'])->name('review.update');
 });
 Route::get('reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
 
-// Comment todo переработать эту хероту
-//Route::middleware(['auth', 'verified'])->group(function () {
-//    Route::post('comment/{reviewId}/{userId}', [CommentController::class, 'store'])->name('comment.upload');
-//});
+// Comment
+
 
 // Auth
 require __DIR__ . '/auth.php';
