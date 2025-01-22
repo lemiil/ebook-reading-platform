@@ -25,15 +25,44 @@
                             Ответить
                         </button>
                     </div>
-                    <!-- Комментарии -->
-                    <div class="ms-4 comments">
-                        @include('review.partials.comments', ['comments' => $review['comments'], 'reviewId' => $review['id']])
-                    </div>
                 </div>
             </div>
         </div>
     </div>
+    <div class="card shadow-sm border-0 rounded mt-4">
+        <div class="p-2 comments">
+            @foreach ($comments as $comment)
+                @include('review.partials.comment', ['comment' => $comment, 'level' => 0, 'reviewId' => $review['id']])
+            @endforeach
+        </div>
+        <style>
+            .comment {
+                border-color: #e0e0e0;
+                padding: 0.5rem 0;
+            }
 
+            .comment-content {
+                margin-bottom: 0.5rem;
+                font-size: 0.875rem;
+                line-height: 1.2;
+            }
+
+            .comment .btn-link {
+                font-size: 0.75rem;
+                color: #007bff;
+            }
+
+            .comment strong {
+                font-size: 0.9rem;
+            }
+
+            .text-muted.small {
+                font-size: 0.75rem;
+            }
+
+        </style>
+
+    </div>
     <div class="modal" id="replyModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -44,7 +73,7 @@
                 <form method="POST" action="{{ route('comment.upload', ['review' =>  $review['id']]) }}">
                     @csrf
                     <div class="modal-body">
-                        <input type="hidden" id="parent-id" name="parent_id" value="">
+                        <input type="hidden" id="parent-id" name="parent_comment_id" value="">
                         <input type="hidden" id="review-id" name="review_id" value="">
                         <div class="mb-3">
                             <label for="content" class="form-label">Комментарий</label>

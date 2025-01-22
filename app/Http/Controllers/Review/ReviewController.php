@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Review;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Review\ReviewStoreRequest;
 use App\Http\Requests\Review\ReviewUpdateRequest;
+use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReviewResource;
 use App\Models\Book;
+use App\Models\Comment;
 use App\Models\Review;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
@@ -42,10 +44,19 @@ class ReviewController extends Controller
 
     public function show(Review $review)
     {
-        $review->load(['comments.childrens.user']);
-        $review = (new ReviewResource($review))->resolve();
+        $comments = $review->comments()
+            ->with(['user', 'children.user'])
+            ->whereNull('parent_comment_id')
+            ->latest()
+            ->paginate(2);
 
-        return view('review.review-show', compact('review'));
+        $reviewResource = new ReviewResource($review);
+        $commentsResource = CommentResource::collection($comments);
+
+        return view('review.review-show', [
+            'review' => $reviewResource->resolve(),
+            'comments' => $commentsResource->toArray(request()),
+        ]);
     }
 
 
