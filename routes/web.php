@@ -71,7 +71,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('reviews/upload', [ReviewController::class, 'store'])->name('review.upload');
     Route::patch('reviews/update', [ReviewController::class, 'update'])->name('review.update');
 });
-Route::get('reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
+Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
 
 // Comment
 

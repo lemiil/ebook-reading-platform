@@ -81,7 +81,51 @@
     main {
         flex: 1;
     }
+
+    .blockquote {
+        font: 13px/21px normal helvetica, sans-serif;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 50px;
+        padding-left: 15px;
+        border-left: 3px solid #ccc;
+    }
+
+    .spoiler {
+        color: transparent;
+        background-color: #000;
+        border-radius: 3px;
+        padding: 0 5px;
+    }
+
+    .spoiler:hover {
+        color: white;
+        background-color: gray;
+    }
+
+
 </style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        function formatText(element) {
+            element.innerHTML = element.innerHTML
+                .replace(/\/(.*?)\//g, "<em>$1</em>")
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/~~(.*?)~~/g, "<del>$1</del>")
+                .replace(/!(.*?)!/g, '<span class="blockquote">$1</span>')
+                .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>');
+        }
+
+        const elements = document.querySelectorAll("body *:not(script):not(style)");
+        elements.forEach((element) => {
+            if (element.children.length === 0) {
+                formatText(element);
+            }
+        });
+    });
+
+</script>
 <script src="https://app.embed.im/snow.js" defer></script>
 </body>
 </html>

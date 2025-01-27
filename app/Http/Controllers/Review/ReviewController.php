@@ -8,8 +8,9 @@ use App\Http\Requests\Review\ReviewUpdateRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReviewResource;
 use App\Models\Book;
-use App\Models\Comment;
+use Illuminate\Http\Request;
 use App\Models\Review;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -22,6 +23,7 @@ class ReviewController extends Controller
             ->where('content', '!=', '')
             ->latest()
             ->paginate(5);
+
         if (request()->ajax()) {
             $reviews->getCollection()->transform(function ($review) {
                 return [
@@ -48,14 +50,25 @@ class ReviewController extends Controller
             ->with(['user', 'children.user'])
             ->whereNull('parent_comment_id')
             ->latest()
-            ->paginate(2);
+            ->paginate(5);
 
         $reviewResource = new ReviewResource($review);
         $commentsResource = CommentResource::collection($comments);
 
+        if (request()->expectsJson()) {
+            return response()->json([
+                'data' => $commentsResource->toArray(request()),
+                'links' => [
+                    'next' => $comments->nextPageUrl(),
+                ],
+            ]);
+        }
+
+
         return view('review.review-show', [
             'review' => $reviewResource->resolve(),
             'comments' => $commentsResource->toArray(request()),
+            'nextPageUrl' => $comments->nextPageUrl(),
         ]);
     }
 

@@ -24,24 +24,6 @@
             </div>
         </div>
     </div>
-    <script src="https://cdn.ckeditor.com/ckeditor5/39.0.0/classic/ckeditor.js"></script>
-
-    <script>
-        ClassicEditor
-            .create(document.querySelector('#editor'), {
-                toolbar: ['bold', 'italic', '|', 'link', 'bulletedList', 'numberedList']
-            })
-            .then(editor => {
-                @if (!empty($userReview) && isset($userReview['content']))
-                editor.setData(`{!! $userReview['content'] !!}`);
-                @endif
-            })
-            .catch(error => {
-                console.error(error);
-            });
-
-
-    </script>
 
     <script>
         $(document).ready(function () {

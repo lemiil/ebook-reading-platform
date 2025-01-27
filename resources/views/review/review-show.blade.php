@@ -35,6 +35,9 @@
                 @include('review.partials.comment', ['comment' => $comment, 'level' => 0, 'reviewId' => $review['id']])
             @endforeach
         </div>
+        <script>
+
+        </script>
         <style>
             .comment {
                 border-color: #e0e0e0;
@@ -42,7 +45,7 @@
             }
 
             .comment-content {
-                margin-bottom: 0.5rem;
+                margin-bottom: 0.7rem;
                 font-size: 0.875rem;
                 line-height: 1.2;
             }
@@ -63,6 +66,64 @@
         </style>
 
     </div>
+    @if ($nextPageUrl)
+        <button id="load-more" class="btn m-2 btn-primary" data-next-url="{{ $nextPageUrl }}">Load More</button>
+    @endif
+
+
+    <script>
+        $(document).ready(function () {
+            let nextPageUrl = "{{ $nextPageUrl }}";
+
+            $('#load-more').on('click', function () {
+                if (!nextPageUrl) return;
+
+                $.ajax({
+                    url: nextPageUrl,
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (response) {
+                        response.data.forEach(comment => {
+                            const html = renderComment(comment, 0);
+                            $('.children-comments').append(html);
+                        });
+
+                        nextPageUrl = response.links.next || null;
+
+                        if (!nextPageUrl) {
+                            $('#load-more').hide();
+                        }
+                    },
+                    error: function () {
+                        alert('Ошибка загрузки комментариев.');
+                    }
+                });
+            });
+        });
+
+        function renderComment(comment, level) {
+            return `
+        <div class="comment py-2" comment-id="${comment.id}"
+             parent-comment-id="${comment.parent_comment_id}"
+             style="margin-left: ${level}px;">
+            <div class="d-flex align-items-center mb-1">
+                <strong>${comment.user.name}</strong>
+                <span class="ms-auto text-muted small">${new Date(comment.created_at).toLocaleDateString()}</span>
+            </div>
+            <div style="white-space: pre-line; word-wrap: break-word;" class="comment-content">
+                ${comment.content}
+            </div>
+            <div class="d-flex align-items-start mt-1">
+                <button class="btn btn-link btn-sm p-0" onclick="openReplyForm(${comment.review_id}, ${comment.id})">
+                    Ответить
+                </button>
+            </div>
+        </div>
+    `;
+        }
+
+    </script>
+
     <div class="modal" id="replyModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">

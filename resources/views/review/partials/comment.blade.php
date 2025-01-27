@@ -6,9 +6,11 @@
         <span class="ms-auto text-muted small">{{ date('d.m.Y', strtotime($comment['created_at']));
 }}</span>
     </div>
-    <div class="comment-content small">
+
+    <div style="white-space: pre-line; word-wrap: break-word;" class="comment-content">
         {!! $comment['content'] !!}
     </div>
+
     <div class="d-flex align-items-start mt-1">
         <button class="btn btn-link btn-sm p-0" onclick="openReplyForm({{ $reviewId }}, {{ $comment['id'] }})">
             Ответить
