@@ -107,23 +107,37 @@
 </style>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
+    $(document).ready(function () {
         function formatText(element) {
-            element.innerHTML = element.innerHTML
+            var formattedText = $(element).html()
                 .replace(/\/(.*?)\//g, "<em>$1</em>")
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .replace(/~~(.*?)~~/g, "<del>$1</del>")
                 .replace(/!(.*?)!/g, '<span class="blockquote">$1</span>')
                 .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>');
+
+            $(element).html(formattedText);
         }
 
-        const elements = document.querySelectorAll("body *:not(script):not(style)");
-        elements.forEach((element) => {
-            if (element.children.length === 0) {
-                formatText(element);
+        $("body").find("*:not(script):not(style)").each(function () {
+            if ($(this).children().length === 0) {
+                formatText(this);
             }
         });
+
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                $(mutation.target).find("*:not(script):not(style)").each(function () {
+                    if ($(this).children().length === 0) {
+                        formatText(this);
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {childList: true, subtree: true});
     });
+
 
 </script>
 <script src="https://app.embed.im/snow.js" defer></script>

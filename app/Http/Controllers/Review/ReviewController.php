@@ -57,18 +57,20 @@ class ReviewController extends Controller
 
         if (request()->expectsJson()) {
             return response()->json([
-                'data' => $commentsResource->toArray(request()),
-                'links' => [
-                    'next' => $comments->nextPageUrl(),
+                'data' => $commentsResource,
+                'meta' => [
+                    'total' => $comments->total(),
+                    'per_page' => $comments->perPage(),
+                    'current_page' => $comments->currentPage(),
+                    'next_page' => $comments->nextPageUrl(),
+                    'last_page' => $comments->lastPage(),
                 ],
             ]);
         }
 
-
         return view('review.review-show', [
             'review' => $reviewResource->resolve(),
-            'comments' => $commentsResource->toArray(request()),
-            'nextPageUrl' => $comments->nextPageUrl(),
+            'comments' => $commentsResource,
         ]);
     }
 

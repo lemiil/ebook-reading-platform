@@ -36,76 +36,46 @@
             @endforeach
         </div>
         <script>
+            $(document).ready(function () {
+                function loadComments(url, container) {
+                    if (!url) return;
 
-        </script>
-        <style>
-            .comment {
-                border-color: #e0e0e0;
-                padding: 0.5rem 0;
-            }
+                    $.ajax({
+                        url: url,
+                        type: 'GET',
+                        dataType: 'json',
+                        success: function (response) {
+                            response.data.forEach(comment => {
+                                const html = renderComment(comment, 0);
+                                container.append(html);
+                            });
 
-            .comment-content {
-                margin-bottom: 0.7rem;
-                font-size: 0.875rem;
-                line-height: 1.2;
-            }
-
-            .comment .btn-link {
-                font-size: 0.75rem;
-                color: #007bff;
-            }
-
-            .comment strong {
-                font-size: 0.9rem;
-            }
-
-            .text-muted.small {
-                font-size: 0.75rem;
-            }
-
-        </style>
-
-    </div>
-    @if ($nextPageUrl)
-        <button id="load-more" class="btn m-2 btn-primary" data-next-url="{{ $nextPageUrl }}">Load More</button>
-    @endif
-
-
-    <script>
-        $(document).ready(function () {
-            let nextPageUrl = "{{ $nextPageUrl }}";
-
-            $('#load-more').on('click', function () {
-                if (!nextPageUrl) return;
-
-                $.ajax({
-                    url: nextPageUrl,
-                    type: 'GET',
-                    dataType: 'json',
-                    success: function (response) {
-                        response.data.forEach(comment => {
-                            const html = renderComment(comment, 0);
-                            $('.children-comments').append(html);
-                        });
-
-                        nextPageUrl = response.links.next || null;
-
-                        if (!nextPageUrl) {
-                            $('#load-more').hide();
+                            const loadMoreButton = $('#load-more');
+                            if (response.meta.current_page < response.meta.last_page) {
+                                loadMoreButton.data('next-url', response.meta.next_page).show();
+                            } else {
+                                loadMoreButton.hide();
+                            }
+                        },
+                        error: function () {
+                            alert('Ошибка загрузки комментариев.');
                         }
-                    },
-                    error: function () {
-                        alert('Ошибка загрузки комментариев.');
-                    }
-                });
-            });
-        });
+                    });
+                }
 
-        function renderComment(comment, level) {
-            return `
-        <div class="comment py-2" comment-id="${comment.id}"
-             parent-comment-id="${comment.parent_comment_id}"
-             style="margin-left: ${level}px;">
+                function renderComment(comment, level) {
+                    let childrenHtml = '';
+
+                    if (comment.children && comment.children.length > 0) {
+                        if (level >= 500) level = 30;
+                        childrenHtml = comment.children.map(child => renderComment(child, level + 30)).join('');
+                    }
+
+
+                    const adjustedLevel = level;
+
+                    const commentHtml = `
+        <div class="comment py-2" comment-id="${comment.id}" parent-comment-id="${comment.parent_comment_id}" style="margin-left: ${adjustedLevel}px;">
             <div class="d-flex align-items-center mb-1">
                 <strong>${comment.user.name}</strong>
                 <span class="ms-auto text-muted small">${new Date(comment.created_at).toLocaleDateString()}</span>
@@ -114,15 +84,36 @@
                 ${comment.content}
             </div>
             <div class="d-flex align-items-start mt-1">
-                <button class="btn btn-link btn-sm p-0" onclick="openReplyForm(${comment.review_id}, ${comment.id})">
-                    Ответить
-                </button>
+                <button class="btn btn-link btn-sm p-0" onclick="openReplyForm(${comment.review_id}, ${comment.id})">Ответить</button>
             </div>
-        </div>
-    `;
-        }
+        </div>`;
 
-    </script>
+                    const childrenHtmlSection = `
+        <div class="children-comments" id="children-${comment.id}">
+            ${childrenHtml}
+        </div>`;
+
+                    return `
+        ${commentHtml}
+        ${childrenHtmlSection}`;
+                }
+
+                $('#load-more').on('click', function () {
+                    let nextUrl = $(this).data('next-url');
+                    loadComments(nextUrl, $('.comments'));
+                });
+            });
+
+        </script>
+    </div>
+
+    @if ($comments->hasMorePages())
+        <button id="load-more" class="btn m-2 btn-primary" data-next-url="{{ $comments->nextPageUrl() }}">
+            Load More
+        </button>
+    @endif
+
+
 
     <div class="modal" id="replyModal" tabindex="-1">
         <div class="modal-dialog">
@@ -150,7 +141,45 @@
         </div>
     </div>
 
+    <style>
+        .comment {
+            position: relative;
+        }
 
+        .children-comments {
+            position: relative;
+        }
+
+
+        .comment .children-comments {
+            padding-left: 20px;
+        }
+
+        .comment {
+            border-color: #e0e0e0;
+            padding: 0.5rem 0;
+        }
+
+        .comment-content {
+            margin-bottom: 0.7rem;
+            font-size: 0.875rem;
+            line-height: 1.2;
+        }
+
+        .comment .btn-link {
+            font-size: 0.75rem;
+            color: #007bff;
+        }
+
+        .comment strong {
+            font-size: 0.9rem;
+        }
+
+        .text-muted.small {
+            font-size: 0.75rem;
+        }
+
+    </style>
     <script>
         function openReplyForm(reviewId, parentId) {
             document.getElementById('review-id').value = reviewId;
