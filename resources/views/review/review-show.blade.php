@@ -45,6 +45,7 @@
                         type: 'GET',
                         dataType: 'json',
                         success: function (response) {
+                            console.log(response)
                             response.data.forEach(comment => {
                                 const html = renderComment(comment, 0);
                                 container.append(html);
@@ -78,7 +79,7 @@
         <div class="comment py-2" comment-id="${comment.id}" parent-comment-id="${comment.parent_comment_id}" style="margin-left: ${adjustedLevel}px;">
             <div class="d-flex align-items-center mb-1">
                 <strong>${comment.user.name}</strong>
-                <span class="ms-auto text-muted small">${new Date(comment.created_at).toLocaleDateString()}</span>
+                <span class="ms-auto text-muted small">${comment.created_at}</span>
             </div>
             <div style="white-space: pre-line; word-wrap: break-word;" class="comment-content">
                 ${comment.content}
