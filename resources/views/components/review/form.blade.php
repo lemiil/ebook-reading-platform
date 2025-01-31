@@ -25,7 +25,7 @@
                 </div>
 
                 <div class="editor-container">
-            <textarea id="editor" name="content" rows="5"
+            <textarea class="form-control" name="content" rows="5"
                       placeholder="{{ $userReview ? 'Редактировать отзыв...' : 'Написать отзыв...' }}"
             >{{ $userReview['content'] ?? '' }}</textarea>
                 </div>

@@ -17,6 +17,50 @@
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 </head>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        function formatText(element) {
+            if (element.dataset.formatted) return;
+
+            let originalText = element.innerHTML;
+            let formattedText = originalText
+                .replace(/(?<!\*)\*\*(.*?)\*\*(?!\*)/g, '<strong>$1</strong>')
+                .replace(/(?<!\/)\/(.*?)\/(?!\/)/g, "<em>$1</em>")
+                .replace(/~~(.*?)~~/g, "<del>$1</del>")
+                .replace(/!(.*?)!/g, '<span class="blockquote">$1</span>')
+                .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>');
+
+            if (formattedText !== originalText) {
+                element.innerHTML = formattedText;
+                element.dataset.formatted = "true";
+            }
+        }
+
+        function processElements(root) {
+            root.querySelectorAll("*:not(script):not(style):not(.editor-container textarea)").forEach(element => {
+                if (!element.children.length) {
+                    formatText(element);
+                }
+            });
+        }
+
+        processElements(document.body);
+
+        const observer = new MutationObserver(mutations => {
+            mutations.forEach(mutation => {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        processElements(node);
+                    }
+                });
+            });
+        });
+
+        observer.observe(document.body, {childList: true, subtree: true});
+    });
+
+
+</script>
 <body>
 <div class="wrapper">
     <!-- Nav -->
@@ -106,40 +150,7 @@
 
 </style>
 
-<script>
-    $(document).ready(function () {
-        function formatText(element) {
-            var formattedText = $(element).html()
-                .replace(/\/(.*?)\//g, "<em>$1</em>")
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/~~(.*?)~~/g, "<del>$1</del>")
-                .replace(/!(.*?)!/g, '<span class="blockquote">$1</span>')
-                .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>');
 
-            $(element).html(formattedText);
-        }
-
-        $("body").find("*:not(script):not(style)").each(function () {
-            if ($(this).children().length === 0) {
-                formatText(this);
-            }
-        });
-
-        const observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-                $(mutation.target).find("*:not(script):not(style)").each(function () {
-                    if ($(this).children().length === 0) {
-                        formatText(this);
-                    }
-                });
-            });
-        });
-
-        observer.observe(document.body, {childList: true, subtree: true});
-    });
-
-
-</script>
 <script src="https://app.embed.im/snow.js" defer></script>
 </body>
 </html>
