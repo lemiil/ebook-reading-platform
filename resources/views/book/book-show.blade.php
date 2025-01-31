@@ -45,9 +45,23 @@
                     likesCountElement.text(`${currentLikes + 1} Likes`);
                 }
 
-                $.post('/reviews/' + reviewId + '/like', {liked: heart.hasClass('liked')});
+                $.ajax({
+                    url: '/like/review/' + reviewId,
+                    type: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        console.log('Review liked');
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('CSRF token mismatch or other error');
+                    }
+                });
+
             });
-        });
+        })
+        ;
     </script>
     <style>
         .fa-heart-o {

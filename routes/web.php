@@ -6,6 +6,7 @@ use App\Http\Controllers\Book\BookUploadController;
 use App\Http\Controllers\Book\BookInfoReadController;
 use App\Http\Controllers\Book\FileController;
 use App\Http\Controllers\Comment\CommentController;
+use App\Http\Controllers\Like\LikeController;
 use App\Http\Controllers\Review\ReviewController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\SettingsController;
@@ -74,6 +75,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
 
 // Comment
+
+
+// Like
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/like/review/{review}', [LikeController::class, 'like']);
+});
 
 
 // Auth
