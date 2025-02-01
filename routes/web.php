@@ -80,6 +80,8 @@ Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('review
 // Like
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/like/review/{review}', [LikeController::class, 'like']);
+    Route::post('/user/reviews/likes', [LikeController::class, 'status']);
+
 });
 
 

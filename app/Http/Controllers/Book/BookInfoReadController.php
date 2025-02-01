@@ -21,9 +21,9 @@ class BookInfoReadController extends Controller
             }
         }
         $bookData = (new BookResource($book))->toArray(request());
+        $reviewIds = collect($bookData['reviews'])->pluck('id');
 
-
-        return view('book.book-show', compact('bookData', 'userReview'));
+        return view('book.book-show', compact('bookData', 'userReview', 'reviewIds'));
     }
 
     public function index()
