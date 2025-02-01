@@ -27,6 +27,20 @@
 
     <script>
         $(document).ready(function () {
+            const storageKey = 'likedReviews';
+            let likedReviews = JSON.parse(localStorage.getItem(storageKey)) || {};
+
+            $(".review").each(function () {
+                const review = $(this);
+                const reviewId = review.data("review-id");
+
+                if (likedReviews[reviewId]) {
+                    const heart = review.find(".heart");
+                    heart.html('<i class="fa fa-heart" aria-hidden="true"></i>');
+                    heart.addClass("liked");
+                }
+            });
+
             $(".review").on("click", ".heart", function () {
                 const heart = $(this);
                 const review = heart.closest(".review");
@@ -34,16 +48,21 @@
                 const reviewId = review.data("review-id");
 
                 let currentLikes = parseInt(likesCountElement.text()) || 0;
+                let isLiked = heart.hasClass("liked");
 
-                if (heart.hasClass("liked")) {
+                if (isLiked) {
                     heart.html('<i class="fa fa-heart-o" aria-hidden="true"></i>');
                     heart.removeClass("liked");
                     likesCountElement.text(`${currentLikes - 1} Likes`);
+                    delete likedReviews[reviewId];
                 } else {
                     heart.html('<i class="fa fa-heart" aria-hidden="true"></i>');
                     heart.addClass("liked");
                     likesCountElement.text(`${currentLikes + 1} Likes`);
+                    likedReviews[reviewId] = true;
                 }
+
+                localStorage.setItem(storageKey, JSON.stringify(likedReviews));
 
                 $.ajax({
                     url: '/like/review/' + reviewId,
@@ -51,17 +70,17 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
-                        console.log('Review liked');
+                    success: function () {
+                        console.log('Review like status updated');
                     },
                     error: function (xhr, status, error) {
-                        console.error('CSRF token mismatch or other error');
+                        console.error('Ошибка при обновлении лайка:', error);
                     }
                 });
-
             });
-        })
-        ;
+        });
+
+
     </script>
     <style>
         .fa-heart-o {

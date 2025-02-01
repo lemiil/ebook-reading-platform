@@ -22,6 +22,7 @@ class BookInfoReadController extends Controller
         }
         $bookData = (new BookResource($book))->toArray(request());
 
+
         return view('book.book-show', compact('bookData', 'userReview'));
     }
 
