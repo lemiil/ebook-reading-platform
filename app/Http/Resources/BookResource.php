@@ -17,7 +17,8 @@ class BookResource extends JsonResource
     public function toArray($request)
     {
         $coverBASE64 = null;
-        $reader = $this->files->firstWhere('format', 'fb2') !== null;
+        $reader = $this->files->firstWhere('format', 'fb2')
+            ?? $this->files->firstWhere('format', 'pdf');
         try {
             $path = storage_path('app/' . $this->files->firstWhere('format', 'epub')->file_path);
             if (file_exists($path)) {

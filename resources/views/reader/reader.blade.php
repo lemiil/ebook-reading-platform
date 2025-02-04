@@ -3,12 +3,12 @@
 @section('content')
     <div class="head">
         <ul class="chapter-list">
-            <x-reader.chapter-list :chapters="$chapters"/>
+            <x-reader.chapter-list :chapters="$content"/>
             <x-reader.settings/>
         </ul>
     </div>
     <div id="chapters" class="chapters">
-        <x-reader.content :chapters="$chapters"/>
+        <x-reader.content :chapters="$content"/>
     </div>
     <style>
         .chapterName {
@@ -19,11 +19,12 @@
             list-style: none;
         }
 
-        a:link,
-        a:visited {
+        .chapter-list a:link,
+        .chapter-list a:visited {
             text-decoration: none;
             color: black;
         }
+
 
         a:hover {
             color: rgb(38, 113, 181);
