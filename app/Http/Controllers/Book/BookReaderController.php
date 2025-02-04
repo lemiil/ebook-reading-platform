@@ -3,14 +3,13 @@
 namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
-use App\Models\Book;
 use App\Services\Book\BookReaderService;
 
 class BookReaderController extends Controller
 {
     protected BookReaderService $bookReaderService;
 
-    public function __construct(Book $book, BookReaderService $BookReaderService)
+    public function __construct(BookReaderService $BookReaderService)
     {
         $this->bookReaderService = $BookReaderService;
     }
@@ -18,11 +17,16 @@ class BookReaderController extends Controller
     public function show($bookId)
     {
         try {
-            $chapters = $this->bookContentResponse($bookId);
-            return view('reader.reader', compact('chapters'));
+            $content = $this->bookContentResponse($bookId);
+
+            if (is_string($content)) {
+                return redirect()->away($content);
+            }
+
+            return view('reader.reader', compact('content'));
         } catch (\Exception $e) {
             return redirect()
-                ->route('book.read', ['book' => $bookId])
+                ->route('book.show', ['book' => $bookId])
                 ->withErrors(['error' => 'Данная книга не поддерживает функционал читалки!']);
 
         }
