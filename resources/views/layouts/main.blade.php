@@ -62,50 +62,49 @@
 <body>
 <div class="wrapper">
     <!-- Nav -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top px-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold" href="/">
+                    <i class="fas fa-book"></i> Books!
+                </a>
 
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top px-3">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">
-                <i class="fas fa-book"></i> Books!
-            </a>
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                <ul class="navbar-nav">
-
-                    <li class="nav-item">
-                        <a class="nav-link" href="#"><i class="fas fa-book-open"></i> Books</a>
-                    </li>
-
-                    @if(auth()->check())
                         <li class="nav-item">
-                            <a class="nav-link" href="#"><i class="fas fa-upload"></i> Upload</a>
+                            <a class="nav-link" href="#"><i class="fas fa-book-open"></i> Books</a>
                         </li>
-                    @endif
 
-                    <li class="nav-item text-white">
-                        <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
-                    </li>
-                </ul>
-            </div>
+                        @if(auth()->check())
+                            <li class="nav-item">
+                                <a class="nav-link" href="#"><i class="fas fa-upload"></i> Upload</a>
+                            </li>
+                        @endif
 
-            <div class="d-flex align-items-center">
-                @auth
-                    <a href="#" class="nav-link text-light">
-                        <i class="fas fa-user"></i> {{ auth()->user()->name }}
-                    </a>
-                @else
-                    <a href="#" class="nav-link text-light">
-                        <i class="fas fa-sign-in-alt"></i> Login
-                    </a>
-                @endauth
+                        <li class="nav-item text-white">
+                            <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    @auth
+                        <a href="#" class="nav-link text-light">
+                            <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                        </a>
+                    @else
+                        <a href="#" class="nav-link text-light">
+                            <i class="fas fa-sign-in-alt"></i> Login
+                        </a>
+                    @endauth
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+    </header>
+
     <div class="mb-3 "></div>
+
     <!-- Content -->
     <main id='main' class="container mt-5">
         @yield('content')

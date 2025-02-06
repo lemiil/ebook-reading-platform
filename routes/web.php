@@ -25,7 +25,7 @@ Route::prefix('books')->group(function () {
     });
 
     Route::get('/{book}/reviews', [ReviewController::class, 'index'])->name('book.reviews.index');
-    Route::get('/', [BookInfoReadController::class, 'index'])->name('book.list');
+    Route::get('/lib', [BookInfoReadController::class, 'index'])->name('book.index');
     Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/download/{format}/{bookId}', [FileController::class, 'download'])->name('book.download');
@@ -39,7 +39,7 @@ Route::prefix('authors')->group(function () {
         Route::post('/upload', [AuthorController::class, 'store'])->name('author.upload');
     });
 
-    Route::get('/', [AuthorController::class, 'index'])->name('author.list');
+    Route::get('/', [AuthorController::class, 'index'])->name('author.index');
     Route::get('/{author}', [AuthorController::class, 'show'])->name('author.show');
 });
 

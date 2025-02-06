@@ -28,10 +28,7 @@ class BookInfoReadController extends Controller
 
     public function index()
     {
-//        todo реализовать
-//        $booksData = BookResource::collection(Book::with(['authors', 'genres', 'tags', 'files', 'reviews'])->get())
-//            ->toArray(request());
-//
-//        return view('book.book-list', compact('booksData'));
+        $books = Book::paginate(36);
+        return view('book.book-index', compact('books'));
     }
 }
