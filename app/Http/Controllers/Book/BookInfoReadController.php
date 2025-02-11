@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Book;
 use App\Http\Controllers\Controller;
 use App\Models\Book;
 use App\Http\Resources\BookResource;
+use Illuminate\Http\Request;
 
 class BookInfoReadController extends Controller
 {
@@ -14,7 +15,7 @@ class BookInfoReadController extends Controller
             $user = auth()->user();
         }
         $userReview = null;
-        if ($user) {
+        if (isset($user)) {
             $userReview = $book->reviews()->where('user_id', $user->id)->first();
             if ($userReview) {
                 $userReview->toArray();
@@ -26,9 +27,30 @@ class BookInfoReadController extends Controller
         return view('book.book-show', compact('bookData', 'userReview', 'reviewIds'));
     }
 
-    public function index()
+    public function index(Request $request)
     {
-        $books = Book::paginate(36);
-        return view('book.book-index', compact('books'));
+        $sort = $request->input('sort', 'rating');
+        $order = $request->boolean('order', false) ? 'asc' : 'desc';
+
+        $query = Book::query();
+
+        switch ($sort) {
+            case 'popular':
+                $query->orderBy('views', $order);
+                break;
+            case 'rating':
+                $query->orderBy('rating', $order);
+                break;
+            case 'title':
+                $query->orderBy('title', $order);
+                break;
+            default:
+                $query->orderBy('created_at', $order);
+                break;
+        }
+
+        $books = $query->paginate(36);
+
+        return view('book.book-index', compact('books', 'sort', 'order'));
     }
 }

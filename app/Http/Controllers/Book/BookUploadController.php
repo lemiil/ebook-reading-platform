@@ -11,7 +11,7 @@ use Exception;
 class BookUploadController extends Controller
 {
 
-    public function index()
+    public function show()
     {
         $genres = Genre::orderBy('name')->get();
         return view("book/book-upload", compact('genres'));

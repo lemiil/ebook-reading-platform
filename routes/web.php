@@ -19,7 +19,7 @@ Route::view('/', 'main')->name('main');
 
 // Book
 Route::prefix('books')->group(function () {
-    Route::get('/upload', [BookUploadController::class, 'index'])->name('book.upload.view');
+    Route::get('/upload', [BookUploadController::class, 'show'])->name('book.upload.view');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/upload', [BookUploadController::class, 'store'])->name('book.upload');
     });

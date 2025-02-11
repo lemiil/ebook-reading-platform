@@ -5,6 +5,20 @@
 @endsection
 
 @section('content')
+    <form method="GET" action="{{ route('book.index') }}">
+        <label>Сортировка:</label>
+        <select name="sort" onchange="this.form.submit()">
+            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>По рейтингу</option>
+            <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По названию</option>
+        </select>
+
+        <label>
+            <input type="checkbox" name="order" value="1"
+                   onchange="this.form.submit()"
+                {{ request()->boolean('order') ? 'checked' : '' }}>
+            Сначала старое
+        </label>
+    </form>
 
     <div class="row mt-5">
         @foreach ($books as $book)
@@ -80,5 +94,41 @@
             border-color: black;
         }
     </style>
+
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('filterForm');
+            const booksContainer = document.getElementById('booksContainer');
+
+            function fetchBooks() {
+                const formData = new FormData(form);
+                const params = new URLSearchParams(formData).toString();
+
+                fetch(`/api/books?${params}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        booksContainer.innerHTML = '';
+                        if (data.data.length === 0) {
+                            booksContainer.innerHTML = '<p>Книги не найдены.</p>';
+                            return;
+                        }
+                        data.data.forEach(book => {
+                            booksContainer.innerHTML += `
+                                <div class="book">
+                                    <h3>${book.title}</h3>
+                                    <p>Рейтинг: ${book.rating}</p>
+                                    <p>Просмотры: ${book.views}</p>
+                                </div>
+                            `;
+                        });
+                    });
+            }
+
+            form.addEventListener('change', fetchBooks);
+            fetchBooks(); // Загружаем книги при первой загрузке
+        });
+
+    </script>
 
 @endsection
