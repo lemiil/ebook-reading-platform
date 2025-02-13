@@ -85,10 +85,18 @@
                         <li class="nav-item text-white">
                             <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
                         </li>
+
                     </ul>
                 </div>
 
+
                 <div class="d-flex align-items-center">
+
+                    <div class="me-3">
+                        <input type="text" id="search" placeholder="Поиск книги..." autocomplete="off">
+                        <div id="results" class="dropdown"></div>
+                    </div>
+
                     @auth
                         <a href="#" class="nav-link text-light">
                             <i class="fas fa-user"></i> {{ auth()->user()->name }}
@@ -117,6 +125,82 @@
         </div>
     </footer>
 </div>
+
+
+<style>
+    .dropdown {
+        position: absolute;
+        width: 200px;
+        background: white;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        display: none;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+    .dropdown a {
+        text-decoration: none;
+        color: black;
+    }
+
+    .dropdown p {
+        padding: 10px;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    .dropdown p:hover {
+        background: #f0f0f0;
+    }
+</style>
+
+<script>
+    $(document).ready(function () {
+        let $search = $('#search');
+        let $results = $('#results');
+        let timeout = null;
+
+        $search.on('keyup', function () {
+            clearTimeout(timeout);
+            let query = $(this).val();
+
+            if (query.length < 2) {
+                $results.hide();
+                return;
+            }
+
+            timeout = setTimeout(function () {
+                $.ajax({
+                    url: '{{ route("book.search") }}',
+                    type: 'GET',
+                    data: {query: query},
+                    success: function (data) {
+                        let results = '';
+                        if (data != '') {
+                            data.forEach(book => {
+                                let bookUrl = '{{ route("book.show", ":id") }}'.replace(':id', book.id);
+                                results += `<a href="${bookUrl}"><p class="result-item" data-title="${book.title}">${book.title}</p></a>`;
+                            });
+                            $results.html(results).show();
+                        }
+                    }
+                });
+            }, 250);
+        });
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#search, #results').length) {
+                $results.hide();
+            }
+        });
+    });
+
+
+</script>
+
+
 <style>
     html, body {
         height: 100%;
