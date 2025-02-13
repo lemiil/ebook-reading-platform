@@ -48,8 +48,13 @@ class BookInfoReadController extends Controller
     {
         $sort = $request->input('sort', 'rating');
         $order = $request->boolean('order', false) ? 'asc' : 'desc';
+        $title = $request->input('title');
 
         $query = Book::query();
+
+        if (!empty($title)) {
+            $query->where('title', 'like', "%{$title}%");
+        }
 
         switch ($sort) {
             case 'popular':
@@ -68,6 +73,7 @@ class BookInfoReadController extends Controller
 
         $books = $query->paginate(36);
 
-        return view('book.book-index', compact('books', 'sort', 'order'));
+        return view('book.book-index', compact('books'));
     }
+
 }

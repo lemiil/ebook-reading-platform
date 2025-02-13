@@ -6,19 +6,27 @@
 
 @section('content')
 
-    <form method="GET" action="{{ route('book.index') }}">
-        <label>Сортировка:</label>
-        <select name="sort" onchange="this.form.submit()">
-            <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>По рейтингу</option>
-            <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По названию</option>
-        </select>
+    <form id="filterForm" method="GET" action="{{ route('book.index') }}" class="d-flex justify-content-between">
+        <div class="">
+            <label for="title">Поиск по названию:</label>
+            <input class="" type="text" id="title" name="title" value="{{ request('title') }}"
+                   placeholder="Введите название">
+            <button type="submit">Найти</button>
+        </div>
 
-        <label>
-            <input type="checkbox" name="order" value="1"
-                   onchange="this.form.submit()"
-                {{ request()->boolean('order') ? 'checked' : '' }}>
-            Сначала старое
-        </label>
+        <div class="form-group">
+            <label>Сортировка:</label>
+            <select name="sort" onchange="this.form.submit()">
+                <option value="rating" {{ request('sort') == 'rating' ? 'selected' : '' }}>По рейтингу</option>
+                <option value="title" {{ request('sort') == 'title' ? 'selected' : '' }}>По названию</option>
+            </select>
+
+            <label>
+                <input type="checkbox" name="order" value="1"
+                       onchange="this.form.submit()" {{ request()->boolean('order') ? 'checked' : '' }}>
+                Сначала старое
+            </label>
+        </div>
     </form>
 
     <div class="row mt-5">
@@ -43,6 +51,7 @@
     {{ $books->links('vendor.pagination.bootstrap-5') }}
 
     <style>
+
         .book-card {
             position: relative;
             overflow: hidden;
@@ -127,7 +136,7 @@
             }
 
             form.addEventListener('change', fetchBooks);
-            fetchBooks(); // Загружаем книги при первой загрузке
+            fetchBooks();
         });
 
     </script>
