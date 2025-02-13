@@ -19,6 +19,7 @@ Route::view('/', 'main')->name('main');
 
 // Book
 Route::prefix('books')->group(function () {
+
     Route::get('/upload', [BookUploadController::class, 'show'])->name('book.upload.view');
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/upload', [BookUploadController::class, 'store'])->name('book.upload');
@@ -26,7 +27,10 @@ Route::prefix('books')->group(function () {
 
     Route::get('/{book}/reviews', [ReviewController::class, 'index'])->name('book.reviews.index');
     Route::get('/lib', [BookInfoReadController::class, 'index'])->name('book.index');
+    Route::get('/search', [BookInfoReadController::class, 'search'])->name('book.search');
     Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
+
+
     Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/download/{format}/{bookId}', [FileController::class, 'download'])->name('book.download');
     });

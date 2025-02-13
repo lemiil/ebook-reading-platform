@@ -9,6 +9,23 @@ use Illuminate\Http\Request;
 
 class BookInfoReadController extends Controller
 {
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        $books = Book::query()
+            ->when($query, function ($q) use ($query) {
+                $q->where(function ($q) use ($query) {
+                    $q->where('title', 'like', "%{$query}%");
+                });
+            })
+            ->limit(20)
+            ->get();
+
+        return response()->json($books);
+    }
+
+
     public function show(Book $book)
     {
         if (auth()->check()) {

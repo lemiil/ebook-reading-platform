@@ -5,6 +5,36 @@
 @endsection
 
 @section('content')
+
+    <input type="text" id="search" placeholder="Поиск книги..." autocomplete="off">
+    <div id="results"></div>
+
+    <script>
+        $(document).ready(function () {
+            $('#search').on('keyup', function () {
+                let query = $(this).val();
+                if (query.length < 2) {
+                    $('#results').html('');
+                    return;
+                }
+
+                $.ajax({
+                    url: '{{ route("book.search") }}',
+                    type: 'GET',
+                    data: {query: query},
+                    success: function (data) {
+                        let results = '';
+                        data.forEach(book => {
+                            results += `<p>${book.title}</p>`;
+                        });
+                        $('#results').html(results);
+                    }
+                });
+            });
+        });
+    </script>
+
+
     <form method="GET" action="{{ route('book.index') }}">
         <label>Сортировка:</label>
         <select name="sort" onchange="this.form.submit()">
