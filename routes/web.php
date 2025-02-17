@@ -8,6 +8,7 @@ use App\Http\Controllers\Book\FileController;
 use App\Http\Controllers\Comment\CommentController;
 use App\Http\Controllers\Like\LikeController;
 use App\Http\Controllers\Review\ReviewController;
+use App\Http\Controllers\Stats\StatsController;
 use App\Http\Controllers\User\ProfileController;
 use App\Http\Controllers\User\SettingsController;
 use Illuminate\Support\Facades\Route;
@@ -69,24 +70,25 @@ Route::get('users/{userId}', [ProfileController::class, 'show'])->name('user.pro
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::post('reviews/{review}/comments/upload', [CommentController::class, 'store'])->name('comment.upload');
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('reviews/upload', [ReviewController::class, 'store'])->name('review.upload');
     Route::patch('reviews/update', [ReviewController::class, 'update'])->name('review.update');
 });
 Route::get('/reviews/{review}', [ReviewController::class, 'show'])->name('review.show');
 
 // Comment
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('reviews/{review}/comments/upload', [CommentController::class, 'store'])->name('comment.upload');
+});
 
 
 // Like
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/like/review/{review}', [LikeController::class, 'like']);
     Route::post('/user/reviews/likes', [LikeController::class, 'status']);
-
 });
+
+// stats
+Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');
 
 
 // Auth
