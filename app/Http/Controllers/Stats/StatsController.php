@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Stats;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Services\Stats\StatsService;
 
 class StatsController extends Controller
@@ -17,7 +16,7 @@ class StatsController extends Controller
 
     public function index()
     {
-        return view('stats.index', [
+        return view('stats.stats-index', [
             'stats' => $this->statsService->getStats(),
         ]);
     }

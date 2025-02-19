@@ -69,23 +69,21 @@
                     <i class="fas fa-book"></i> Books!
                 </a>
 
-                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
-                    <ul class="navbar-nav">
-
-                        <li class="nav-item">
+                <div class="justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav" style="margin-left: 120px">
+                        <li class="">
                             <a class="nav-link" href="#"><i class="fas fa-book-open"></i> Books</a>
                         </li>
 
                         @if(auth()->check())
-                            <li class="nav-item">
+                            <li class="">
                                 <a class="nav-link" href="#"><i class="fas fa-upload"></i> Upload</a>
                             </li>
                         @endif
 
-                        <li class="nav-item text-white">
+                        <li class="">
                             <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
                         </li>
-
                     </ul>
                 </div>
 
