@@ -24,6 +24,7 @@
             </div>
         </div>
     </div>
+
     <script>
         $(document).ready(function () {
             const reviewIds = @json(collect($bookData['reviews'])->pluck('id'));
@@ -78,64 +79,4 @@
             });
         });
     </script>
-
-    <style>
-        .fa-heart-o {
-            color: red;
-            cursor: pointer;
-        }
-
-        .fa-heart {
-            color: red;
-            cursor: pointer;
-        }
-
-        .card img {
-            max-height: 300px;
-            object-fit: cover;
-        }
-
-        .rate {
-            gap: 0.5rem;
-            transform: scaleX(-1);
-        }
-
-
-        .rate:not(:checked) > input {
-            position: absolute;
-            top: -9999px;
-        }
-
-        .rate:not(:checked) > label {
-            float: right;
-            width: 1em;
-            overflow: hidden;
-            white-space: nowrap;
-            cursor: pointer;
-            font-size: 30px;
-            color: #ccc;
-        }
-
-        .rate:not(:checked) > label:before {
-            content: '★ ';
-        }
-
-        .rate > input:checked ~ label {
-            color: #ffc700;
-        }
-
-        .rate:not(:checked) > label:hover,
-        .rate:not(:checked) > label:hover ~ label {
-            color: #deb217;
-        }
-
-        .rate > input:checked + label:hover,
-        .rate > input:checked + label:hover ~ label,
-        .rate > input:checked ~ label:hover,
-        .rate > input:checked ~ label:hover ~ label,
-        .rate > label:hover ~ input:checked ~ label {
-            color: #c59b08;
-        }
-
-    </style>
 @endsection

@@ -6,7 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}">
     <title>@yield('title')</title>
-
+    @vite(['resources/assets/css/main.css'])
+    @vite(['resources/assets/css/js.css'])
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -17,48 +18,6 @@
             integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
 </head>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        function formatText(element) {
-            if (element.dataset.formatted) return;
-
-            let originalText = element.innerHTML;
-            let formattedText = originalText
-                .replace(/(?<!\*)\*\*(.*?)\*\*(?!\*)/g, '<strong>$1</strong>')
-                .replace(/(?<!\/)\/(.*?)\/(?!\/)/g, "<em>$1</em>")
-                .replace(/~~(.*?)~~/g, "<del>$1</del>")
-                .replace(/!(.*?)!/g, '<span class="blockquote">$1</span>')
-                .replace(/\|\|(.*?)\|\|/g, '<span class="spoiler">$1</span>');
-
-            if (formattedText !== originalText) {
-                element.innerHTML = formattedText;
-                element.dataset.formatted = "true";
-            }
-        }
-
-        function processElements(root) {
-            root.querySelectorAll("*:not(script):not(style):not(.editor-container textarea)").forEach(element => {
-                if (!element.children.length) {
-                    formatText(element);
-                }
-            });
-        }
-
-        processElements(document.body);
-
-        const observer = new MutationObserver(mutations => {
-            mutations.forEach(mutation => {
-                mutation.addedNodes.forEach(node => {
-                    if (node.nodeType === Node.ELEMENT_NODE) {
-                        processElements(node);
-                    }
-                });
-            });
-        });
-
-        observer.observe(document.body, {childList: true, subtree: true});
-    });
-</script>
 <body>
 <div class="wrapper">
     <!-- Nav -->
@@ -123,120 +82,6 @@
         </div>
     </footer>
 </div>
-
-
-<style>
-    .dropdown {
-        position: absolute;
-        width: 200px;
-        background: white;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        display: none;
-        max-height: 200px;
-        overflow-y: auto;
-        z-index: 1000;
-    }
-
-    .dropdown a {
-        text-decoration: none;
-        color: black;
-    }
-
-    .dropdown p {
-        padding: 10px;
-        margin: 0;
-        cursor: pointer;
-    }
-
-    .dropdown p:hover {
-        background: #f0f0f0;
-    }
-</style>
-
-<script>
-    $(document).ready(function () {
-        let $search = $('#search');
-        let $results = $('#results');
-        let timeout = null;
-
-        $search.on('keyup', function () {
-            clearTimeout(timeout);
-            let query = $(this).val();
-
-            if (query.length < 2) {
-                $results.hide();
-                return;
-            }
-
-            timeout = setTimeout(function () {
-                $.ajax({
-                    url: '{{ route("book.search") }}',
-                    type: 'GET',
-                    data: {query: query},
-                    success: function (data) {
-                        let results = '';
-                        if (data != '') {
-                            data.forEach(book => {
-                                let bookUrl = '{{ route("book.show", ":id") }}'.replace(':id', book.id);
-                                results += `<a href="${bookUrl}"><p class="result-item" data-title="${book.title}">${book.title}</p></a>`;
-                            });
-                            $results.html(results).show();
-                        }
-                    }
-                });
-            }, 250);
-        });
-
-        $(document).on('click', function (e) {
-            if (!$(e.target).closest('#search, #results').length) {
-                $results.hide();
-            }
-        });
-    });
-
-
-</script>
-
-
-<style>
-    html, body {
-        height: 100%;
-    }
-
-    .wrapper {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    main {
-        flex: 1;
-    }
-
-    .blockquote {
-        font: 13px/21px normal helvetica, sans-serif;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        margin-left: 50px;
-        padding-left: 15px;
-        border-left: 3px solid #ccc;
-    }
-
-    .spoiler {
-        color: transparent;
-        background-color: #000;
-        border-radius: 3px;
-        padding: 0 5px;
-    }
-
-    .spoiler:hover {
-        color: white;
-        background-color: gray;
-    }
-
-
-</style>
 
 
 <script src="https://app.embed.im/snow.js" defer></script>
