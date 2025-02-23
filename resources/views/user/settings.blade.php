@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Settings
+@endsection
+
 @section('content')
     <div class="py-4">
         <div class="container">

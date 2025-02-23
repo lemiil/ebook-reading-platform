@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    Нужно добавить название сюды
+    {{ $authorData['name'] }}
 @endsection
 
 @section('content')

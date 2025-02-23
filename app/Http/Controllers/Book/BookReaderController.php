@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Book;
 
 use App\Http\Controllers\Controller;
+use App\Models\Book;
 use App\Services\Book\BookReaderService;
 
 class BookReaderController extends Controller
@@ -18,12 +19,13 @@ class BookReaderController extends Controller
     {
         try {
             $content = $this->bookContentResponse($bookId);
+            $title = Book::find($bookId)?->title;
 
             if (is_string($content)) {
                 return redirect()->away($content);
             }
 
-            return view('reader.reader', compact('content'));
+            return view('reader.reader', compact('content', 'title'));
         } catch (\Exception $e) {
             return redirect()
                 ->route('book.show', ['book' => $bookId])

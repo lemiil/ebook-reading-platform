@@ -38,7 +38,6 @@
                 @else
                     <p class="text-muted">
                         <strong>Рейтинг:</strong> {{ number_format($bookData['rating'], 1) }}/10
-                        рейтинг нужно будет переставить
                     </p>
                 @endif
             @endif

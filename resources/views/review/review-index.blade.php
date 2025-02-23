@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Reviews
+@endsection
+
 @section('content')
     <div class="card shadow-sm border-0 rounded mt-4">
         <div class="p-4">

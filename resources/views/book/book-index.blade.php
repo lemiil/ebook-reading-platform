@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    Books
+    Lib
 @endsection
 
 @section('content')

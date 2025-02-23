@@ -1,11 +1,11 @@
 @extends('layouts.main')
 
 @section('title')
-    Books Main
+    Book upload
 @endsection
 
 @section('content')
 
     @include('book.partials.book-form')
-    
+
 @endsection

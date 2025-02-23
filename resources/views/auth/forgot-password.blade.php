@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Forgot password
+@endsection
+
 @section('content')
     <div class="container w-50">
         <div class="row justify-content-center">
