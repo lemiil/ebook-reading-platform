@@ -31,17 +31,19 @@
                 <div class="justify-content-center" id="navbarNav">
                     <ul class="navbar-nav" style="margin-left: 120px">
                         <li class="">
-                            <a class="nav-link" href="#"><i class="fas fa-book-open"></i> Books</a>
+                            <a class="nav-link" href=" {{ route('book.index')  }} "><i class="fas fa-book-open"></i>
+                                Books</a>
                         </li>
 
                         @if(auth()->check())
                             <li class="">
-                                <a class="nav-link" href="#"><i class="fas fa-upload"></i> Upload</a>
+                                <a class="nav-link" href=" {{ route('book.upload') }} "><i class="fas fa-upload"></i>
+                                    Upload</a>
                             </li>
                         @endif
 
                         <li class="">
-                            <a class="nav-link" href="#"><i class="fas fa-info-circle"></i> About</a>
+                            <a class="nav-link" href=" {{ route('about')  }} "><i class="fas fa-info-circle"></i> About</a>
                         </li>
                     </ul>
                 </div>

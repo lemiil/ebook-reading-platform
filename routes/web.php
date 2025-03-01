@@ -22,7 +22,7 @@ Route::view('/', 'main')->name('main');
 Route::prefix('books')->group(function () {
 
     Route::get('/upload', [BookUploadController::class, 'show'])->name('book.upload.view');
-    Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['auth', 'verified', 'throttle:global'])->group(function () {
         Route::post('/upload', [BookUploadController::class, 'store'])->name('book.upload');
     });
 
@@ -32,7 +32,7 @@ Route::prefix('books')->group(function () {
     Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
 
 
-    Route::middleware(['auth', 'verified'])->group(function () {
+    Route::middleware(['auth', 'verified', 'throttle:global'])->group(function () {
         Route::get('/download/{format}/{bookId}', [FileController::class, 'download'])->name('book.download');
     });
 });
@@ -87,8 +87,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/user/reviews/likes', [LikeController::class, 'status']);
 });
 
-// stats
+// Stats
 Route::get('/stats', [StatsController::class, 'index'])->name('stats.index');
+
+// About
+Route::view('/about', 'about.about')->name('about');
 
 
 // Auth
