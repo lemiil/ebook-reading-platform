@@ -22,7 +22,7 @@
 <div class="wrapper">
     <!-- Nav -->
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top px-3">
+        <nav id="navbar" class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top px-3">
             <div class="container">
                 <a class="navbar-brand fw-bold" href="/">
                     <i class="fas fa-book"></i> Books!
@@ -53,8 +53,9 @@
 
                     <div class="me-3">
                         <input type="text" id="search" placeholder="Поиск книги..." autocomplete="off">
-                        <div id="results" class="dropdown"></div>
+                        <div id="results" style="position: absolute" class="dropdown"></div>
                     </div>
+
 
                     @auth
                         <a href="#" class="nav-link text-light">
@@ -85,6 +86,48 @@
     </footer>
 </div>
 
+
+<script>
+    $(document).ready(function () {
+        let $search = $('#search');
+        let $results = $('#results');
+        let timeout = null;
+
+        $search.on('keyup', function () {
+            clearTimeout(timeout);
+            let query = $(this).val();
+
+            if (query.length < 2) {
+                $results.hide();
+                return;
+            }
+
+            timeout = setTimeout(function () {
+                $.ajax({
+                    url: '{{ route("book.search") }}',
+                    type: 'GET',
+                    data: {query: query},
+                    success: function (data) {
+                        let results = '';
+                        if (data != '') {
+                            data.forEach(book => {
+                                let bookUrl = '{{ route("book.show", ":id") }}'.replace(':id', book.id);
+                                results += `<a href="${bookUrl}"><p class="result-item" data-title="${book.title}">${book.title}</p></a>`;
+                            });
+                            $results.html(results).show();
+                        }
+                    }
+                });
+            }, 250);
+        });
+
+        $(document).on('click', function (e) {
+            if (!$(e.target).closest('#search, #results').length) {
+                $results.hide();
+            }
+        });
+    });
+</script>
 
 <script src="https://app.embed.im/snow.js" defer></script>
 </body>
