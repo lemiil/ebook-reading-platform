@@ -19,21 +19,20 @@ Route::view('/', 'main')->name('main');
 // Book upload view
 
 // Book
-Route::prefix('books')->group(function () {
+Route::prefix('books')->as('book.')->group(function () {
 
-    Route::get('/upload', [BookUploadController::class, 'show'])->name('book.upload.view');
+    Route::get('/upload', [BookUploadController::class, 'show'])->name('upload.index');
     Route::middleware(['auth', 'verified', 'throttle:global'])->group(function () {
-        Route::post('/upload', [BookUploadController::class, 'store'])->name('book.upload');
+        Route::post('/upload', [BookUploadController::class, 'store'])->name('upload');
     });
 
-    Route::get('/{book}/reviews', [ReviewController::class, 'index'])->name('book.reviews.index');
-    Route::get('/lib', [BookInfoReadController::class, 'index'])->name('book.index');
-    Route::get('/search', [BookInfoReadController::class, 'search'])->name('book.search');
-    Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('book.show');
-
+    Route::get('/{book}/reviews', [ReviewController::class, 'index'])->name('reviews.index');
+    Route::get('/lib', [BookInfoReadController::class, 'index'])->name('index');
+    Route::get('/search', [BookInfoReadController::class, 'search'])->name('search');
+    Route::get('/{book}', [BookInfoReadController::class, 'show'])->name('show');
 
     Route::middleware(['auth', 'verified', 'throttle:global'])->group(function () {
-        Route::get('/download/{format}/{bookId}', [FileController::class, 'download'])->name('book.download');
+        Route::get('/download/{format}/{bookId}', [FileController::class, 'download'])->name('download');
     });
 });
 
@@ -51,10 +50,6 @@ Route::prefix('authors')->group(function () {
 // Reader
 Route::get('/read/{bookId}', [BookReaderController::class, 'show'])->name('book.reader');
 
-// User page
-//Route::get('/user/{user}', [ProfileController::class, 'pageShow'])->name('user.read');
-
-
 // Settings page
 Route::middleware(['auth'])->group(function () {
     Route::get('user/settings', [SettingsController::class, 'settings'])->name('user.settings');
@@ -66,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // Profile page
-Route::get('users/{userId}', [ProfileController::class, 'show'])->name('user.profile');
+Route::get('users/{userId}', [ProfileController::class, 'index'])->name('user.profile');
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {
