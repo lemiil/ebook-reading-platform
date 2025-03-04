@@ -9,7 +9,6 @@
         <div class="col-md-8">
             <div class="card shadow-sm">
                 <div class="card-body text-center">
-                    <img src="https://via.placeholder.com/150" class="rounded-circle mb-3" alt="Аватар">
                     <h3 class="mb-2">Имя Пользователя</h3>
                     <p class="text-muted">example@example.com</p>
                     <button class="btn btn-dark" onclick="location.href='{{ route('user.settings')  }}';">
