@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
 
 
 // Profile page
-Route::get('users/{userId}', [ProfileController::class, 'index'])->name('user.profile');
+Route::get('users/{user}', [ProfileController::class, 'index'])->name('profile');
 
 // Review
 Route::middleware(['auth', 'verified'])->group(function () {

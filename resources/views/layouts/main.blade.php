@@ -53,14 +53,35 @@
 
                     <div class="me-3">
                         <input type="text" id="search" placeholder="Поиск книги..." autocomplete="off">
-                        <div id="results" style="position: absolute" class="dropdown"></div>
+                        <div id="results" style="position: absolute" class="dropdown-search"></div>
                     </div>
 
 
                     @auth
-                        <a href="#" class="nav-link text-light">
-                            <i class="fas fa-user"></i> {{ auth()->user()->name }}
-                        </a>
+                        <div class="dropdown">
+                            <button class="nav-link text-light" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item"
+                                       href="{{ route('profile', ['user' => auth()->user()->id])}} ">Профиль</a>
+                                </li>
+                                <li><a class="dropdown-item" href=" {{ route('user.settings') }} ">Настройки</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <form method
+                                          ="POST"
+                                          action="{{ route('logout') }}">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item text-danger">
+                                            Выйти
+                                        </button>
+                                    </form>
+                            </ul>
+                        </div>
                     @else
                         <a href="#" class="nav-link text-light">
                             <i class="fas fa-sign-in-alt"></i> Login
