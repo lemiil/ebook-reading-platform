@@ -1,12 +1,12 @@
 
 .dropdown-search {
-    width: 200px;
+    width: 12.5rem;
     top: 100%;
     background: white;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    border: 0.063rem solid #ccc;
+    border-radius: 0.313rem;
     display: none;
-    max-height: 200px;
+    max-height: 12.5rem;
     overflow-y: auto;
     z-index: 1;
 }
@@ -15,7 +15,7 @@
     text-decoration: none;
     color: black;
     display: block;
-    padding: 5px 10px;
+    padding: 0.313rem 0.625rem;
 }
 
 .book-card {
@@ -48,8 +48,8 @@
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
     text-align: center;
-    padding: 10px;
-    font-size: 16px;
+    padding: 0.625rem;
+    font-size: 1rem;
     font-weight: bold;
 }
 
@@ -71,7 +71,7 @@
 }
 
 .dropdown-search p {
-    padding: 10px;
+    padding: 0.625rem;
     margin: 0;
     cursor: pointer;
 }
@@ -105,7 +105,7 @@ main {
 }
 
 .card img {
-    max-height: 300px;
+    max-height: 18.75rem;
     object-fit: cover;
 }
 
@@ -126,7 +126,7 @@ main {
     overflow: hidden;
     white-space: nowrap;
     cursor: pointer;
-    font-size: 30px;
+    font-size: 1.875rem;
     color: #ccc;
 }
 
@@ -177,7 +177,7 @@ main {
 
 
 .comment .children-comments {
-    padding-left: 20px;
+    padding-left: 1.25rem;
 }
 
 .comment {
@@ -229,7 +229,7 @@ main {
 .tag {
     padding: 0.3rem 0.6rem;
     background: #e0e0e0;
-    border: 1px solid #ccc;
+    border: 0.063rem solid #ccc;
     border-radius: 0.3rem;
 }
 
@@ -238,19 +238,19 @@ main {
 }
 
 .blockquote {
-    font: 13px/21px normal helvetica, sans-serif;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    margin-left: 50px;
-    padding-left: 15px;
-    border-left: 3px solid #ccc;
+    font: 0.813rem/1.313rem normal helvetica, sans-serif;
+    margin-top: 0.625rem;
+    margin-bottom: 0.625rem;
+    margin-left: 3.125rem;
+    padding-left: 0.938rem;
+    border-left: 0.188rem solid #ccc;
 }
 
 .spoiler {
     color: transparent;
     background-color: #000;
-    border-radius: 3px;
-    padding: 0 5px;
+    border-radius: 0.188rem;
+    padding: 0 0.313rem;
 }
 
 .spoiler:hover {

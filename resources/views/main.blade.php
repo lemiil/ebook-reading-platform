@@ -5,7 +5,26 @@
 @endsection
 
 @section('content')
-    <h1>Welcome to Books!</h1>
+    <div class="main d-flex flex-column justify-content-center align-items-center">
+        <h2 class="welcome">welcome to</h2>
+        <h1 class="retroshadow">Books!</h1>
+    </div>
+
+    <style>
+        .welcome {
+            position: relative;
+            top: 2rem;
+        }
+
+
+        .retroshadow {
+            font-size: 8rem;
+            color: #2c2c2c;
+            letter-spacing: .05em;
+            text-shadow: 4px 4px 0px #d5d5d5,
+            7px 7px 0px rgba(0, 0, 0, 0.2);
+        }
+    </style>
     {{--    <div style="white-space:pre">--}}
     {{--        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⡤⣚⣯⣭⣶⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣯⣝⠢⢄⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀--}}
     {{--        ⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢀⣴⣿⢾⡿⣟⣿⣻⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⢿⣿⣿⣿⣶⣭⢢⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀--}}

@@ -29,7 +29,7 @@
                 </a>
 
                 <div class="justify-content-center" id="navbarNav">
-                    <ul class="navbar-nav" style="margin-left: 120px">
+                    <ul class="navbar-nav" style="margin-left: 7.5rem">
                         <li class="">
                             <a class="nav-link" href=" {{ route('book.index')  }} "><i class="fas fa-book-open"></i>
                                 Books</a>
