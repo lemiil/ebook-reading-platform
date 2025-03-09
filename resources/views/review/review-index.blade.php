@@ -9,7 +9,7 @@
         <div class="p-4">
             <div id="reviews-list" class="reviews-list mt-3">
                 @if($reviews->total() == 0)
-                    <p class="text-muted">Отзывов пока нет.</p>
+                    <p class="text-muted">There is no reviews.</p>
                 @else
                     @foreach($reviews as $review)
                         <div class="mb-4 row border-bottom review" data-review-id="{{ $review['id'] }}">
@@ -18,7 +18,7 @@
                                 <span
                                     class="ms-auto text-muted">{{ $review["created_at"]->format('d.m.Y') }}</span>
                             </div>
-                            <p><strong>Оценка:</strong> {{ $review['rating'] }}/10</p>
+                            <p><strong>Rating:</strong> {{ $review['rating'] }}/10</p>
                             <div
                                 style="white-space: pre-wrap; word-wrap: break-word;">{!! $review['content']  ?? 'No content provided.' !!}</div>
                             <div class="d-flex align-items-start mb-3">

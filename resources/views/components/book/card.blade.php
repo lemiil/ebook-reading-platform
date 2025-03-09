@@ -1,4 +1,4 @@
-<div class="card shadow-sm border-0 rounded mt-4">
+<div class="card shadow-sm border-0 rounded mt-4 p-5">
     <div class="row g-0">
         <div class="col-md-4 d-flex justify-content-center align-items-center">
             @if(isset($bookData['coverBASE64']))
@@ -30,30 +30,33 @@
             @endif
 
             @if(isset($bookData['year']))
-                <p class="text-muted"><strong>Год издания:</strong> {{ $bookData['year'] }}</p>
+                <p class="text-muted"><strong>Year</strong> {{ $bookData['year'] }}</p>
             @endif
 
             @if(isset($bookData['rating']))
                 @if($bookData['rating'] == 0)
                 @else
                     <p class="text-muted">
-                        <strong>Рейтинг:</strong> {{ number_format($bookData['rating'], 1) }}/10
+                        <strong>Rating:</strong> {{ number_format($bookData['rating'], 1) }}/10
                     </p>
                 @endif
             @endif
 
             <strong>
-                <div class="text-muted">Аннотация:</div>
+                <div class="text-muted">Description:</div>
             </strong>
             <div class="description text-muted mb-4">
                 <p>{{ $bookData['description'] }}</p>
             </div>
-            <div class="d-flex">
+            <div class="d-flex flex-column">
                 @if($bookData['reader'])
                     <form action="{{ route('book.reader', ['bookId' => request('book')]) }}"
                           target="_blank">
-                        <button class="btn btn-primary me-1">Читать</button>
+                        <button class="btn btn-primary me-1">Read</button>
                     </form>
+                @endif
+                @if($bookData['formats'] != '[]')
+                    <p>Download:</p>
                 @endif
                 @foreach($bookData['formats'] as $format)
                     <form

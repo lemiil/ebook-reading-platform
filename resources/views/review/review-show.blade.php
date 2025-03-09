@@ -14,7 +14,7 @@
                         <strong>{{ $review['name'] }}</strong>
                         <span class="ms-auto text-muted">{{ $review['created_at'] }}</span>
                     </div>
-                    <p><strong>Оценка:</strong> {{ $review['rating'] }}/10</p>
+                    <p><strong>Rating:</strong> {{ $review['rating'] }}/10</p>
                     <div class="d-flex" style="white-space: pre-wrap; word-wrap: break-word;">
                         {!! $review['content'] ?? 'No content provided.' !!}
                     </div>
@@ -26,7 +26,7 @@
                             {{ $review['likes'] }} Likes
                         </div>
                         <button class="btn btn-link ms-auto" onclick="openReplyForm({{ $review['id'] }}, null)">
-                            Ответить
+                            Send
                         </button>
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                             }
                         },
                         error: function () {
-                            alert('Ошибка загрузки комментариев.');
+                            alert('Error.');
                         }
                     });
                 }
@@ -124,8 +124,8 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Написать комментарий</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    <h5 class="modal-title">Send comment</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <form method="POST" action="{{ route('comment.upload', ['review' =>  $review['id']]) }}">
                     @csrf
@@ -133,13 +133,13 @@
                         <input type="hidden" id="parent-id" name="parent_comment_id" value="">
                         <input type="hidden" id="review-id" name="review_id" value="">
                         <div class="mb-3">
-                            <label for="content" class="form-label">Комментарий</label>
+                            <label for="content" class="form-label">Comment</label>
                             <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                        <button type="submit" class="btn btn-primary">Отправить</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Send</button>
                     </div>
                 </form>
             </div>

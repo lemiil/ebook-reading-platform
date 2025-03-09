@@ -1,4 +1,4 @@
-<h2>Оглавление</h2>
+<h2>Chapters</h2>
 @foreach ($chapters as $key => $chapter)
     <li class="chapter-item">
         <a href="#chapter_{{$key}}">

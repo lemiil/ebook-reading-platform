@@ -14,9 +14,10 @@
                 </div>
             </div>
             <div class="card mt-4">
-                <div class="card-header">Информация</div>
+                <div class="card-header">Info</div>
                 <div class="card-body">
-                    <p><strong>Дата регистрации:</strong> {{ date('d.m.Y', strtotime( $user->email_verified_at ))}}</p>
+                    <p><strong>Date of registration:</strong> {{ date('d.m.Y', strtotime( $user->email_verified_at ))}}
+                    </p>
                 </div>
             </div>
         </div>

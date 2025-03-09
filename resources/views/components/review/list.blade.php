@@ -1,9 +1,9 @@
 <div class="card shadow-sm border-0 rounded mt-4">
     <div class="p-4">
-        <h3 class="fw-bold text-dark">Отзывы</h3>
+        <h3 class="fw-bold text-dark">Reviews</h3>
         <div class="reviews-list mt-3">
             @if($bookData['reviews']->count() == 0)
-                <p class="text-muted">Отзывов пока нет.</p>
+                <p class="text-muted">There is no reviews.</p>
             @else
                 @foreach($bookData['reviews'] as $review)
                     <div class="mb-4 row border-bottom review" data-review-id="{{ $review['id'] }}">
@@ -12,7 +12,7 @@
                             <span
                                 class="ms-auto text-muted">{{ $review["created_at"] }}</span>
                         </div>
-                        <p><strong>Оценка:</strong> {{ $review['rating'] }}/10</p>
+                        <p><strong>Rating:</strong> {{ $review['rating'] }}/10</p>
                         <div
                             style="white-space: pre-wrap; word-wrap: break-word;">{!! $review['content']  ?? 'No content provided.' !!}</div>
                         <div class="d-flex align-items-start mb-3">

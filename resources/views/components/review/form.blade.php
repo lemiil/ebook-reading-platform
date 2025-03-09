@@ -1,7 +1,7 @@
 <div class="card shadow-sm border-0 rounded mt-4">
     <div class="p-4">
         <h3 class="fw-bold text-dark">
-            {{ $userReview ? 'Редактировать отзыв' : 'Оставить отзыв' }}
+            {{ $userReview ? 'Edit review' : 'Write review' }}
         </h3>
         <form
             action="{{ $userReview ? route('review.update', ['review_id' => $userReview['id']]) : route('review.upload') }}"
@@ -26,13 +26,13 @@
 
                 <div class="editor-container">
             <textarea class="form-control" name="content" rows="5"
-                      placeholder="{{ $userReview ? 'Редактировать отзыв...' : 'Написать отзыв...' }}"
+                      placeholder="{{ $userReview ? 'Edit review...' : 'Write review...' }}"
             >{{ $userReview['content'] ?? '' }}</textarea>
                 </div>
             </div>
 
             <button type="submit"
-                    class="btn btn-primary mt-3">{{ $userReview ? 'Изменить' : 'Отправить' }}</button>
+                    class="btn btn-primary mt-3">{{ $userReview ? 'Edit' : 'Send' }}</button>
         </form>
 
     </div>

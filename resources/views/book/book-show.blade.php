@@ -1,7 +1,7 @@
 @extends('layouts.main')
 
 @section('title')
-    {{ $title ?? 'Информация о книге' }}
+    {{ $title ?? 'Book info' }}
 @endsection
 
 @section('content')

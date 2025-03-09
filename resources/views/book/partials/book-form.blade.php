@@ -8,41 +8,40 @@
                         @csrf
                         <div class="mb-3">
                             <br class="form-label">
-                            На сайте присуствует функция парсинга метаданных с книги. Тем не менее, заполнять данные
-                            вручную
-                            <b>рекомендуется</b>.
+                            The site has a function for parsing metadata with books. However, filling in the data
+                            manually is <b>recommended</b>.
                             </label>
                         </div>
 
                         <div class="mb-3">
-                            <label for="title" class="form-label">Название</label>
+                            <label for="title" class="form-label">Name</label>
                             <input type="text" name="title" class="form-control" id="title" maxlength="255"
-                                   placeholder="Введите название книги" required>
+                                   placeholder="Name" required>
                         </div>
 
                         <div class="mb-3">
                             <div class="d-flex justify-content-between">
-                                <label for="author" class="form-label">Автор</label>
+                                <label for="author" class="form-label">Author</label>
                                 <a href="{{ route('author.upload') }}" class="text-dark" target="_blank">
-                                    Добавить нового автора
+                                    Add new author
                                 </a>
                             </div>
                             <select id="author-select" name="authors[]" multiple required class="form-control"></select>
                         </div>
 
                         <div class="mb-3">
-                            <label for="description" class="form-label">Описание</label>
+                            <label for="description" class="form-label">Description</label>
                             <textarea name="description" class="form-control" id="description" rows="4"
-                                      maxlength="2048" placeholder="Введите описание книги"></textarea>
+                                      maxlength="2048" placeholder="Description"></textarea>
                         </div>
 
                         <div class="mb-3">
-                            <label for="year" class="form-label">Год издания</label>
+                            <label for="year" class="form-label">Year</label>
                             <input type="number" name="year" class="form-control" id="year" min="0" max="2100">
                         </div>
 
                         <div class="mb-3">
-                            <label class="form-label">Жанры</label>
+                            <label class="form-label">Genres</label>
                             <div class="row g-2">
                                 @foreach($genres as $genre)
                                     <div class="col-6">
@@ -58,12 +57,12 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="tags" class="form-label">Теги</label>
+                            <label for="tags" class="form-label">Tags</label>
                             <select id="tag-select" name="tags[]" multiple class="form-control"></select>
                         </div>
 
                         <div class="mb-3 d-flex align-items-center">
-                            <label for="cover" class="form-label me-3">Обложка книги</label>
+                            <label for="cover" class="form-label me-3">Cover</label>
                             <div class="position-relative">
                                 <img id="blah" class="img-fluid rounded shadow"
                                      style="max-width: 200px; max-height: 300px; object-fit: cover;"/>
@@ -88,7 +87,7 @@
                         </div>
 
                         <button type="submit" class="btn btn-dark w-100" style="max-width: 150px; margin: auto">
-                            Загрузить
+                            Upload
                         </button>
                     </form>
                 </div>
@@ -116,7 +115,7 @@
         $(document).ready(function () {
             $('#author-select').select2({
                 language: 'ru',
-                placeholder: 'Начните вводить имя автора',
+                placeholder: 'Author',
                 ajax: {
                     url: '/api/authors/search',
                     dataType: 'json',

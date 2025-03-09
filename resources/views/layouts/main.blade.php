@@ -52,7 +52,7 @@
                 <div class="d-flex align-items-center">
 
                     <div class="me-3">
-                        <input type="text" id="search" placeholder="Поиск книги..." autocomplete="off">
+                        <input type="text" id="search" placeholder="Search" autocomplete="off">
                         <div id="results" style="position: absolute" class="dropdown-search"></div>
                     </div>
 
@@ -61,13 +61,13 @@
                         <div class="dropdown">
                             <button class="nav-link text-light" type="button" data-bs-toggle="dropdown"
                                     aria-expanded="false">
-                                <i class="fas fa-user"></i> {{ auth()->user()->name }}
+                                <i class="fas fa-user"></i>
                             </button>
                             <ul class="dropdown-menu">
                                 <li><a class="dropdown-item"
-                                       href="{{ route('profile', ['user' => auth()->user()->id])}} ">Профиль</a>
+                                       href="{{ route('profile', ['user' => auth()->user()->id])}} ">Profile</a>
                                 </li>
-                                <li><a class="dropdown-item" href=" {{ route('user.settings') }} ">Настройки</a></li>
+                                <li><a class="dropdown-item" href=" {{ route('user.settings') }} ">Settings</a></li>
                                 <li>
                                     <hr class="dropdown-divider">
                                 </li>
@@ -77,7 +77,7 @@
                                           action="{{ route('logout') }}">
                                         @csrf
                                         <button type="submit" class="dropdown-item text-danger">
-                                            Выйти
+                                            Log out
                                         </button>
                                     </form>
                             </ul>
