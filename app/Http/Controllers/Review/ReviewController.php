@@ -8,21 +8,22 @@ use App\Http\Requests\Review\ReviewUpdateRequest;
 use App\Http\Resources\CommentResource;
 use App\Http\Resources\ReviewResource;
 use App\Models\Book;
-use Illuminate\Http\Request;
 use App\Models\Review;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use App\Services\ReviewService;
+use Illuminate\Http\Request;
 
 class ReviewController extends Controller
 {
+    protected $reviewService;
+
+    public function __construct(ReviewService $reviewService)
+    {
+        $this->reviewService = $reviewService;
+    }
 
     public function index(Book $book)
     {
-        $reviews = $book->reviews()
-            ->where('content', '!=', '')
-            ->latest()
-            ->paginate(5);
+        $reviews = $this->reviewService->getReviewsForBook($book);
 
         if (request()->ajax()) {
             $reviews->getCollection()->transform(function ($review) {
@@ -43,21 +44,13 @@ class ReviewController extends Controller
         return view('review.review-index', compact('reviews'));
     }
 
-
     public function show(Review $review)
     {
-        $comments = $review->comments()
-            ->with(['user', 'children.user'])
-            ->whereNull('parent_comment_id')
-            ->latest()
-            ->paginate(5);
-
-        $reviewResource = new ReviewResource($review);
-        $commentsResource = CommentResource::collection($comments);
+        $comments = $this->reviewService->getReviewComments($review);
 
         if (request()->expectsJson()) {
             return response()->json([
-                'data' => $commentsResource,
+                'data' => CommentResource::collection($comments),
                 'meta' => [
                     'total' => $comments->total(),
                     'per_page' => $comments->perPage(),
@@ -69,56 +62,20 @@ class ReviewController extends Controller
         }
 
         return view('review.review-show', [
-            'review' => $reviewResource->resolve(),
-            'comments' => $commentsResource,
+            'review' => new ReviewResource($review),
+            'comments' => CommentResource::collection($comments),
         ]);
     }
-
 
     public function store(ReviewStoreRequest $request, Book $book)
     {
-        $user = Auth::user();
-
-        if ($book->reviews()->where('user_id', $user->id)->exists()) {
-            throw ValidationException::withMessages([
-                'user_id' => 'You have already reviewed this book.',
-            ]);
-        }
-
-        $validatedData = $request->validated();
-        $validatedData['user_id'] = $user->id;
-        Review::create($validatedData);
-        $this->recalculateBookRating($validatedData['book_id']);
-        return redirect()->route('book.show', $validatedData['book_id']);
+        $this->reviewService->storeReview($request, $book);
+        return redirect()->route('book.show', $book->id);
     }
 
-    public function update(ReviewUpdateRequest $request)
+    public function update(ReviewUpdateRequest $request, Review $review)
     {
-        $user = Auth::user();
-
-        $review = Review::findOrFail($_GET['review_id']);
-
-        if ($review->user_id !== $user->id) {
-            return redirect()->route('reviews.index')->with('error', 'You are not authorized to update this review.');
-        }
-
-        $review->update([
-            'rating' => $request->rating,
-            'content' => $request->toArray()['content'] ?? null,
-        ]);
-
-        return redirect()->route('main', $review)->with('success', 'Review updated successfully.');
-    }
-
-
-    private function recalculateBookRating($bookId)
-    {
-        $book = Book::findOrFail($bookId);
-        if ($book->reviews()->count() > 0) {
-            $book->rating = $book->reviews()->avg('rating');
-        } else {
-            $book->rating = 0;
-        }
-        $book->save();
+        $review = $this->reviewService->updateReview($request, $review);
+        return redirect()->route('main')->with('success', 'Review updated successfully.');
     }
 }
