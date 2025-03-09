@@ -8,6 +8,7 @@
     <div class="main d-flex flex-column justify-content-center align-items-center">
         <h2 class="welcome">welcome to</h2>
         <h1 class="retroshadow">Books!</h1>
+        <p>Lorem ipsum</p>
     </div>
 
     <style>
